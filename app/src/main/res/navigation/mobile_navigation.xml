@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/idInicio">
+
+    <fragment
+        android:id="@+id/idInicio"
+        android:name="com.example.truequeapp.ui.inicio.InicioFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/inicio" >
+
+        <action
+            android:id="@+id/action_HomeFragment_to_HomeSecondFragment"
+            app:destination="@id/nav_home_second" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_home_second"
+        android:name="com.example.truequeapp.ui.inicio.HomeSecondFragment"
+        android:label="@string/home_second"
+        tools:layout="@layout/fragment_home_second">
+        <action
+            android:id="@+id/action_HomeSecondFragment_to_HomeFragment"
+            app:destination="@id/idInicio" />
+
+        <argument
+            android:name="myArg"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/idMisProductos"
+        android:name="com.example.truequeapp.ui.misProductos.ProductosFragment"
+        android:label="@string/menu_gallery"
+        tools:layout="@layout/misProductos" />
+
+    <fragment
+        android:id="@+id/idMatches"
+        android:name="com.example.truequeapp.ui.misMatches.MisMatchesFragment"
+        android:label="@string/menu_slideshow"
+        tools:layout="@layout/mis_matches" />
+</navigation>
