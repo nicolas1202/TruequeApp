@@ -1,26 +1,17 @@
 package com.example.truequeapp.ui.login;
 
-import android.app.Activity;
-
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -28,16 +19,11 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.truequeapp.MainActivity;
 import com.example.truequeapp.R;
 import com.example.truequeapp.Registro;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText et_password;
     Button loginButton ;
     Button btnRegistro;
-    String usuario;
+    String email;
     String pass;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,19 +45,19 @@ public class LoginActivity extends AppCompatActivity {
                 .get(LoginViewModel.class);
 
 
-        et_password = findViewById(R.id.password);
-        et_username = findViewById(R.id.username);
+        et_password = findViewById(R.id.etPassword);
+        et_username = findViewById(R.id.etUsername);
         loginButton = findViewById(R.id.btnLogin);
         btnRegistro = findViewById(R.id.btnRegistro);
-
+        recuperarPreferencias();
 
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                usuario = et_username.getText().toString();
+                email = et_username.getText().toString();
                 pass = et_password.getText().toString();
-                if (!usuario.isEmpty() && !pass.isEmpty()){
+                if (!email.isEmpty() && !pass.isEmpty()){
                     validarUsuario("http://192.168.54.187:80/WebServiceTruequeApp/loginUsuario.php");
                 }else{
                     Toast.makeText(getApplicationContext(), "Ingrese usuario o contraseña", Toast.LENGTH_LONG).show();
@@ -98,8 +84,10 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 //vemos que la respuesta no venga vacia
                 if (!response.isEmpty()){
+                    guardarPreferencias();
                     Intent i = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(i);
+                    finish();
                 }else{
                     Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrectos", Toast.LENGTH_LONG).show();
                 }
@@ -113,13 +101,32 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> parametros = new HashMap<String, String>();
-                parametros.put("email", et_username.getText().toString());
-                parametros.put("password", et_password.getText().toString());
+                parametros.put("email", email);
+                parametros.put("password", pass);
                 return parametros;
             }
         };
         //procesa las peticiones hechas por la app
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
+    }
+
+    //Proceso para guardar email y contraseña para que no tenga que ingresarlo cada vez que abre la app
+    private void guardarPreferencias(){
+        SharedPreferences preferences = getSharedPreferences("preferenciasLogin", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putString("email", email);
+        editor.putString("password", pass);
+        editor.putBoolean("session", true);
+        editor.commit();
+    }
+
+    //Proceso para leer email y contraseña para que no tenga que ingresarlo cada vez que abre la app
+    private void recuperarPreferencias(){
+        SharedPreferences preferences = getSharedPreferences("preferenciasLogin", Context.MODE_PRIVATE);
+
+        et_username.setText(preferences.getString("email", "micorreo@gmail.com"));
+        et_password.setText(preferences.getString("password", "micontraseña"));
     }
 }
