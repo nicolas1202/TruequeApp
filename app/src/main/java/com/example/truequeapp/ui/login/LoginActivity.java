@@ -118,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
 
         editor.putString("email", email);
         editor.putString("password", pass);
-        editor.putBoolean("session", true);
+        editor.putBoolean("sesion", true);
         editor.commit();
     }
 
