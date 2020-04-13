@@ -37,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
     Button btnRegistro;
     String email;
     String pass;
+    String nombre;
+    String apellido;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                 Map<String,String> parametros = new HashMap<String, String>();
                 parametros.put("email", email);
                 parametros.put("password", pass);
+
                 return parametros;
             }
         };
