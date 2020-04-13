@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                         tvemail.setText(jsonObject.getString("email"));
                         tvenombre.setText(jsonObject.getString("nombre") );
                         //apellidoDB = (jsonObject.getString("apellido"));
-                        Log.i("emailDB", emailDB);
+
 
                     } catch (JSONException e) {
                         Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
