@@ -9,31 +9,23 @@
         android:id="@+id/idInicio"
         android:name="com.example.truequeapp.ui.inicio.InicioFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/inicio" >
+        tools:layout="@layout/mi_inicio" >
+
 
         <action
-            android:id="@+id/action_HomeFragment_to_HomeSecondFragment"
-            app:destination="@id/nav_home_second" />
-    </fragment>
-    <fragment
-        android:id="@+id/nav_home_second"
-        android:name="com.example.truequeapp.ui.inicio.HomeSecondFragment"
-        android:label="@string/home_second"
-        tools:layout="@layout/fragment_home_second">
+            android:id="@+id/action_idInicio_to_idMisProductos"
+            app:destination="@id/idMisProductos" />
         <action
-            android:id="@+id/action_HomeSecondFragment_to_HomeFragment"
-            app:destination="@id/idInicio" />
-
-        <argument
-            android:name="myArg"
-            app:argType="string" />
+            android:id="@+id/action_idInicio_to_idMatches"
+            app:destination="@id/idMatches" />
     </fragment>
+
 
     <fragment
         android:id="@+id/idMisProductos"
         android:name="com.example.truequeapp.ui.misProductos.ProductosFragment"
         android:label="@string/menu_gallery"
-        tools:layout="@layout/misProductos" />
+        tools:layout="@layout/mis_productos" />
 
     <fragment
         android:id="@+id/idMatches"

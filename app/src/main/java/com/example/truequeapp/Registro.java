@@ -52,7 +52,7 @@ public class Registro extends AppCompatActivity {
         registrarse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ejecutarServicio( "http://192.168.54.187:80/WebServiceTruequeApp/insertUsuario.php");
+                ejecutarServicio( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/insertUsuario.php");
             }
         });
 

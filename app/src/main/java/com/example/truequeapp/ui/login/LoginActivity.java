@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
                 email = et_username.getText().toString();
                 pass = et_password.getText().toString();
                 if (!email.isEmpty() && !pass.isEmpty()){
-                    validarUsuario("http://192.168.54.187:80/WebServiceTruequeApp/loginUsuario.php");
+                    validarUsuario("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/loginUsuario.php");
                 }else{
                     Toast.makeText(getApplicationContext(), "Ingrese usuario o contraseña", Toast.LENGTH_LONG).show();
                 }

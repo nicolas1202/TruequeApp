@@ -35,7 +35,7 @@ import org.json.JSONObject;
 
 import java.io.Console;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
 
     private AppBarConfiguration mAppBarConfiguration;
     NavigationView navigationView;
@@ -68,14 +68,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-         navigationView = findViewById(R.id.nav_view);
+        // navigationView = findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         tvemail = (TextView) headerView.findViewById(R.id.et_EmailUsuario);
         tvenombre = (TextView) headerView.findViewById(R.id.et_NombreUsuario);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.idInicio, R.id.idMisProductos, R.id.idMatches)
+                R.id.idInicio, R.id.idMisProductos, R.id.idMatches, R.id.idCerrarSesion)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("preferenciasLogin", Context.MODE_PRIVATE);
         emailapp = (preferences.getString("email", "micorreo@gmail.com"));
 
-        getInfoUser("http://192.168.54.187:80/WebServiceTruequeApp/getinfouser.php?email="+emailapp+"");
+        getInfoUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getInfoUser.php?email="+emailapp+"");
 
     }
 
@@ -117,6 +118,8 @@ public class MainActivity extends AppCompatActivity {
                         jsonObject = response.getJSONObject(i);
                         tvemail.setText(jsonObject.getString("email"));
                         tvenombre.setText(jsonObject.getString("nombre") );
+                        Log.i("email000",jsonObject.getString("email"));
+                        Log.i("nombre000",jsonObject.getString("nombre"));
                         //apellidoDB = (jsonObject.getString("apellido"));
 
 
@@ -136,4 +139,6 @@ public class MainActivity extends AppCompatActivity {
             requestQueue = Volley.newRequestQueue(this);
             requestQueue.add(jsonArrayRequest);
     }
+
+
 }

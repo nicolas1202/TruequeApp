@@ -8,6 +8,7 @@
             android:id="@+id/idInicio"
             android:icon="@drawable/ic_menu_camera"
             android:title="Inicio" />
+
         <item
         android:id="@+id/idMisProductos"
         android:icon="@drawable/ic_menu_gallery"
@@ -19,6 +20,21 @@
             android:title="Mis Matches" />
 
 
+    </group>
 
-            </group>
+    <item android:title="Otras acciónes">
+
+
+        <menu>
+            <item
+                android:id="@+id/idCerrarSesion"
+                android:icon="@drawable/ic_menu_camera"
+                android:title="Cerrar Sesión" />
+
+        </menu>
+
+    </item>
+
+
+
 </menu>

@@ -21,11 +21,11 @@ public class MisMatchesFragment extends Fragment {
         misMatchesViewModel =
                 ViewModelProviders.of(this).get(MisMatchesViewModel.class);
         View root = inflater.inflate(R.layout.mis_matches, container, false);
-        final TextView textView = root.findViewById(R.id.text_slideshow);
+
         misMatchesViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                textView.setText(s);
+
             }
         });
         return root;

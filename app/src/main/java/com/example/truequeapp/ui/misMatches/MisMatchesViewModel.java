@@ -10,7 +10,7 @@ public class MisMatchesViewModel extends ViewModel {
 
     public MisMatchesViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("Fragment Matches");
+        //mText.setValue("Fragment Matches");
     }
 
     public LiveData<String> getText() {

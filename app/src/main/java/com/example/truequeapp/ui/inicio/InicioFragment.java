@@ -20,12 +20,12 @@ public class InicioFragment extends Fragment {
             ViewGroup container, Bundle savedInstanceState) {
         inicioViewModel =
                 ViewModelProviders.of(this).get(InicioViewModel.class);
-        View root = inflater.inflate(R.layout.inicio, container, false);
-        final TextView textView = root.findViewById(R.id.text_home);
+        View root = inflater.inflate(R.layout.mi_inicio, container, false);
+
         inicioViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                textView.setText(s);
+
             }
         });
         return root;
