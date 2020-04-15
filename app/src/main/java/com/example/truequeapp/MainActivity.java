@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,8 +17,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.truequeapp.ui.login.LoginActivity;
+import com.facebook.login.LoginManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.squareup.picasso.Picasso;
 
 import androidx.annotation.ColorInt;
 import androidx.core.content.ContextCompat;
@@ -44,6 +47,9 @@ public class MainActivity extends AppCompatActivity  {
     RequestQueue requestQueue;
     TextView tvemail;
     TextView tvenombre;
+    ImageView imagenPerfil;
+    int bandera2=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,18 +58,30 @@ public class MainActivity extends AppCompatActivity  {
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
 
-
         //seteo de icono salir boton flotante
         fab.setImageResource(R.drawable.logout);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences preferences = getSharedPreferences("preferenciasLogin", Context.MODE_PRIVATE);
-                preferences.edit().clear().commit();
-                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(i);
-                finish();
+
+                if (bandera2 == 1){
+                    LoginManager.getInstance().logOut();
+                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                    bandera2 =0;
+                    startActivity(i);
+                    finish();
+                }else{
+
+                    bandera2=0;
+                    LoginManager.getInstance().logOut();
+                    SharedPreferences preferences = getSharedPreferences("preferenciasLogin", Context.MODE_PRIVATE);
+                    preferences.edit().clear().commit();
+                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(i);
+                    finish();
+                }
+
             }
         });
 
@@ -73,6 +91,8 @@ public class MainActivity extends AppCompatActivity  {
         View headerView = navigationView.getHeaderView(0);
         tvemail = (TextView) headerView.findViewById(R.id.et_EmailUsuario);
         tvenombre = (TextView) headerView.findViewById(R.id.et_NombreUsuario);
+        imagenPerfil = headerView.findViewById(R.id.idFotoPerfil);
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -83,10 +103,13 @@ public class MainActivity extends AppCompatActivity  {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        SharedPreferences preferences = getSharedPreferences("preferenciasLogin", Context.MODE_PRIVATE);
-        emailapp = (preferences.getString("email", "micorreo@gmail.com"));
+        Bundle informacionUsuario = getIntent().getExtras();
 
-        getInfoUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getInfoUser.php?email="+emailapp+"");
+        int bandera = informacionUsuario != null ? informacionUsuario.getInt("bandera", 2) : 2;
+        RecibirDatosLogin(bandera);
+
+
+
 
     }
 
@@ -103,7 +126,6 @@ public class MainActivity extends AppCompatActivity  {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
-
 
 
     public void getInfoUser(String URL){
@@ -140,5 +162,25 @@ public class MainActivity extends AppCompatActivity  {
             requestQueue.add(jsonArrayRequest);
     }
 
+    public void RecibirDatosLogin(int bandera){
 
+        if (bandera == 1){
+            Bundle informacionUsuario = getIntent().getExtras();
+            String setNombreFB = informacionUsuario.getString("NombreFB");
+            String setEmailFB = informacionUsuario.getString("EmailFB");
+            String setImagenFB = informacionUsuario.getString("ImagenPerfil");
+
+            tvemail.setText(setEmailFB);
+            tvenombre.setText(setNombreFB);
+            Picasso.get().load(setImagenFB).into(imagenPerfil);
+
+
+        }else{
+            SharedPreferences preferences = getSharedPreferences("preferenciasLogin", Context.MODE_PRIVATE);
+            emailapp = (preferences.getString("email", "micorreo@gmail.com"));
+
+            getInfoUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getInfoUser.php?email="+emailapp+"");
+
+        }
+    }
 }

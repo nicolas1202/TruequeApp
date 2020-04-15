@@ -20,10 +20,12 @@
         tools:layout_editor_absoluteY="16dp">
 
         <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="193dp"
-            android:layout_height="192dp"
+            android:id="@+id/imageView"
+            android:layout_width="176dp"
+            android:layout_height="163dp"
             app:srcCompat="@drawable/logo" />
+
+
 
         <EditText
             android:id="@+id/etUsername"
@@ -61,6 +63,15 @@
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="64dp"
             android:visibility="gone" />
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/login_button"
+            android:layout_width="286dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            tools:ignore="MissingConstraints" />
 
         <Button
             android:id="@+id/btnLogin"
