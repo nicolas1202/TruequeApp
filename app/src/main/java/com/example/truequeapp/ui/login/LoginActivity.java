@@ -62,8 +62,6 @@ public class LoginActivity extends AppCompatActivity {
     Button btnRegistro;
     String email;
     String pass;
-    String nombre;
-    String apellido;
     int banderaFacebookOno= 2;
 
     //VARIABLES LOGIN FACEBOOK
@@ -138,7 +136,17 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
 
-
+        if (accessTokenTracker != null){
+            banderaFacebookOno = 1;
+            FirebaseUser user = mFirebaseAuth.getCurrentUser();
+            UpdateUI(user);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra("NombreFB", nombreFB);
+            intent.putExtra("EmailFB", emailFB);
+            intent.putExtra("ImagenPerfil", imagenPerfil);
+            intent.putExtra("bandera", banderaFacebookOno);
+            startActivity(intent);
+        }
 
         // FIN FACEBOOK
         //-----------------------------------------------------//
@@ -192,7 +200,8 @@ public class LoginActivity extends AppCompatActivity {
                     intent.putExtra("EmailFB", emailFB);
                     intent.putExtra("ImagenPerfil", imagenPerfil);
                     intent.putExtra("bandera", banderaFacebookOno);
-                    startActivity(intent);
+                    RegistrarUsuarioFacebook("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/insertUsuarioFB.php", nombreFB, emailFB, imagenPerfil, intent);
+                    //startActivity(intent);
                 }else{
                     Log.d(TAG, "Sign in with credentials: Failure", task.getException());
                     Toast.makeText(LoginActivity.this, "Autentication failed", Toast.LENGTH_LONG).show();
@@ -206,6 +215,38 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+    private void RegistrarUsuarioFacebook(String URL, final String nombrep, final String emailpa, final String fotoPerfilp, final Intent intentp){
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //Toast.makeText(getApplicationContext(), "USUARIO FB GUARDADO", Toast.LENGTH_SHORT).show();
+               startActivity(intentp);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(),error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> parametros = new HashMap<String, String>();
+                parametros.put("nombre", nombrep);
+                parametros.put("email", emailpa);
+                parametros.put("fotoPerfil", fotoPerfilp);
+                return parametros;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+
+
+
 
     }
 
