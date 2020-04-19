@@ -6,17 +6,17 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/idInicio"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_cached"
             android:title="Inicio" />
 
         <item
         android:id="@+id/idMisProductos"
-        android:icon="@drawable/ic_menu_gallery"
+        android:icon="@drawable/ic_unarchive"
         android:title="Mis Productos" />
 
         <item
             android:id="@+id/idMatches"
-            android:icon="@android:drawable/presence_offline"
+            android:icon="@drawable/ic_thumb"
             android:title="Mis Matches" />
 
 
@@ -28,7 +28,7 @@
         <menu>
             <item
                 android:id="@+id/idCerrarSesion"
-                android:icon="@drawable/ic_menu_camera"
+                android:icon="@drawable/logout"
                 android:title="Cerrar Sesión" />
 
         </menu>

@@ -42,7 +42,7 @@ public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.
 
         holder.tvNombre.setText(listaProductos.get(position).getNombre());
         holder.tvDescripcion.setText(listaProductos.get(position).getDescripcion());
-        holder.tvPrecio.setText(listaProductos.get(position).getPrecio());
+        holder.tvPrecio.setText("$ " + listaProductos.get(position).getPrecio());
         //holder.imFoto.setImageResource(listaProductos.get(position).getFoto());
 
     }
