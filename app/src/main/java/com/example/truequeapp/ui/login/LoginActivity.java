@@ -63,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
     String email;
     String pass;
     int banderaFacebookOno= 2;
+    int banderaActivityMain;
 
     //VARIABLES LOGIN FACEBOOK
     private CallbackManager mCallbackManager ;
@@ -70,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
     private LoginButton loginButton;
     private static final String TAG = "FacebookAuthentication";
     private FirebaseAuth.AuthStateListener authStateListener;
-    private AccessTokenTracker accessTokenTracker;
+    FirebaseUser user;
 
     String nombreFB;
     String emailFB;
@@ -126,28 +127,19 @@ public class LoginActivity extends AppCompatActivity {
         };
 
 
+        user = mFirebaseAuth.getCurrentUser();
+        if (user != null){
 
-        accessTokenTracker = new AccessTokenTracker() {
-            @Override
-            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-                if (currentAccessToken == null){
-                    mFirebaseAuth.signOut();
-                }
-            }
-        };
+        banderaFacebookOno = 1;
 
-        if (accessTokenTracker != null){
-            banderaFacebookOno = 1;
-            FirebaseUser user = mFirebaseAuth.getCurrentUser();
-            UpdateUI(user);
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.putExtra("NombreFB", nombreFB);
-            intent.putExtra("EmailFB", emailFB);
-            intent.putExtra("ImagenPerfil", imagenPerfil);
-            intent.putExtra("bandera", banderaFacebookOno);
-            startActivity(intent);
+        UpdateUI(user);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra("NombreFB", nombreFB);
+        intent.putExtra("EmailFB", emailFB);
+        intent.putExtra("ImagenPerfil", imagenPerfil);
+        intent.putExtra("bandera", banderaFacebookOno);
+        startActivity(intent);
         }
-
         // FIN FACEBOOK
         //-----------------------------------------------------//
 

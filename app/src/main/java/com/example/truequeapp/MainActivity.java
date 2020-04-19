@@ -17,9 +17,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.truequeapp.ui.login.LoginActivity;
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.login.LoginManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import androidx.annotation.ColorInt;
@@ -49,6 +53,7 @@ public class MainActivity extends AppCompatActivity  {
     TextView tvenombre;
     ImageView imagenPerfil;
     int bandera2=0;
+final static String TAG = "BUTTON FACEBOOOOOOK";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,25 +67,20 @@ public class MainActivity extends AppCompatActivity  {
         fab.setImageResource(R.drawable.logout);
 
         fab.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
 
-                if (bandera2 == 1){
+                    Toast.makeText(getApplicationContext(),"FB", Toast.LENGTH_SHORT).show();
+                    FirebaseAuth.getInstance().signOut();
                     LoginManager.getInstance().logOut();
-                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                     bandera2 =0;
-                    startActivity(i);
-                    finish();
-                }else{
-
-                    bandera2=0;
-                    LoginManager.getInstance().logOut();
                     SharedPreferences preferences = getSharedPreferences("preferenciasLogin", Context.MODE_PRIVATE);
                     preferences.edit().clear().commit();
                     Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(i);
                     finish();
-                }
+
 
             }
         });
