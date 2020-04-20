@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "392898494972",
+    "firebase_url": "https://truequeapp-807bf.firebaseio.com",
+    "project_id": "truequeapp-807bf",
+    "storage_bucket": "truequeapp-807bf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:392898494972:android:19e279967b96953f46b279",
+        "android_client_info": {
+          "package_name": "com.example.truequeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "392898494972-75dfkfnpm89n3cuntbcif1lpb0j20uo3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.truequeapp",
+            "certificate_hash": "5a7abaceee753a6e66d4ac7dfcf65060f5341796"
+          }
+        },
+        {
+          "client_id": "392898494972-ruplu6vofcift7863hn1q10ta1deco6e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDT4_5rCH8xAtZq8i31xmvHwIcLnVJihTg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "392898494972-ruplu6vofcift7863hn1q10ta1deco6e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

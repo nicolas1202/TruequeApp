@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,10 +17,11 @@ import java.util.List;
 
 public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.ProductoViewHolder> implements View.OnClickListener {
 
-    Context context;
-    List<Producto> listaProductos;
+    private Context context;
+    private List<Producto> listaProductos;
     private Button btnEliminarProductoCardview;
     private View.OnClickListener listener;
+
 
     public AdaptadorProductos(Context context, List<Producto> listaProductos) {
         this.context = context;

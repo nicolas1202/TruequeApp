@@ -127,7 +127,6 @@ final static String TAG = "BUTTON FACEBOOOOOOK";
                 || super.onSupportNavigateUp();
     }
 
-
     public void getInfoUser(String URL){
 
         JsonArrayRequest jsonArrayRequest =  new JsonArrayRequest(URL, new Response.Listener<JSONArray>() {
