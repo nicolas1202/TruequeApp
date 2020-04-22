@@ -19,13 +19,12 @@
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="16dp">
 
+
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="176dp"
-            android:layout_height="163dp"
-            app:srcCompat="@drawable/logo" />
-
-
+            android:layout_width="207dp"
+            android:layout_height="186dp"
+            app:srcCompat="@drawable/trueque_app_imagotipo" />
 
         <EditText
             android:id="@+id/etUsername"

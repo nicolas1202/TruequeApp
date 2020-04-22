@@ -6,10 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".SplashActivity">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#3E3E3E"
+        android:background="@drawable/gradient_background"
         android:gravity="center"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="0dp"
@@ -19,13 +20,7 @@
             android:id="@+id/imageView"
             android:layout_width="309dp"
             android:layout_height="185dp"
-            app:srcCompat="@drawable/logo" />
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            app:srcCompat="@drawable/trueque_app_isotipo" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
