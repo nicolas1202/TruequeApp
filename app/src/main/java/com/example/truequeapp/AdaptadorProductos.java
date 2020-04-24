@@ -29,6 +29,8 @@ public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.
 
     }
 
+
+
     @NonNull
     @Override
 

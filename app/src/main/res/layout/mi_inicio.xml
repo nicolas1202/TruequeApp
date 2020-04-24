@@ -7,11 +7,20 @@
     android:layout_height="match_parent"
     tools:context=".ui.inicio.InicioFragment" >
 
+
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvProductosI"
+            android:layout_width="match_parent"
+            android:layout_height="591dp"
+            android:layout_marginBottom="51dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

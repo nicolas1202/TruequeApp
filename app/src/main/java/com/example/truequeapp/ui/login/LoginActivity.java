@@ -24,12 +24,15 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.truequeapp.MainActivity;
 import com.example.truequeapp.R;
 import com.example.truequeapp.Registro;
 
+import java.security.MessageDigest;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,6 +55,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.codec.binary.Base64;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -62,9 +74,11 @@ public class LoginActivity extends AppCompatActivity {
     Button btnRegistro;
     String email;
     String pass;
+    String passDBDesencriptada;
+    String passDBDEencriptada;
     int banderaFacebookOno= 2;
     int banderaActivityMain;
-
+    RequestQueue requestQueue;
     //VARIABLES LOGIN FACEBOOK
     private CallbackManager mCallbackManager ;
     private FirebaseAuth mFirebaseAuth;
@@ -159,7 +173,8 @@ public class LoginActivity extends AppCompatActivity {
                 email = et_username.getText().toString();
                 pass = et_password.getText().toString();
                 if (!email.isEmpty() && !pass.isEmpty()){
-                    validarUsuario("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/loginUsuario.php");
+                    getInfoUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getInfoUser.php?email="+email+"");
+
                 }else{
                     Toast.makeText(getApplicationContext(), "Ingrese usuario o contraseña", Toast.LENGTH_LONG).show();
                 }
@@ -251,7 +266,7 @@ public class LoginActivity extends AppCompatActivity {
                 String photoURL = user.getPhotoUrl().toString();
                 photoURL = photoURL + "?type=large";
                 imagenPerfil = photoURL;
-               // Picasso.get().load(photoURL).into(mLogo);
+                //Picasso.get().load(photoURL).into(mLogo);
             }
         }else{
            Toast.makeText(getApplicationContext(), "Datos usuario vacios QUITAR MENSAJE", Toast.LENGTH_LONG).show();
@@ -301,7 +316,7 @@ public class LoginActivity extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> parametros = new HashMap<String, String>();
                 parametros.put("email", email);
-                parametros.put("password", pass);
+                parametros.put("password", passDBDesencriptada);
 
                 return parametros;
             }
@@ -329,4 +344,90 @@ public class LoginActivity extends AppCompatActivity {
         et_username.setText(preferences.getString("email", "micorreo@gmail.com"));
         et_password.setText(preferences.getString("password", "micontraseña"));
     }
+
+    public static String Desencriptar(String textoEncriptado)  {
+
+        String secretKey = "qualityinfosolutions"; //llave para desenciptar datos
+        String base64EncryptedString = "";
+
+        try {
+            byte[] message = Base64.decodeBase64(textoEncriptado.getBytes("utf-8"));
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digestOfPassword = md.digest(secretKey.getBytes("utf-8"));
+            byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
+            SecretKey key = new SecretKeySpec(keyBytes, "DESede");
+
+            Cipher decipher = Cipher.getInstance("DESede");
+            decipher.init(Cipher.DECRYPT_MODE, key);
+
+            byte[] plainText = decipher.doFinal(message);
+
+            base64EncryptedString = new String(plainText, "UTF-8");
+
+        } catch (Exception ex) {
+        }
+        return base64EncryptedString;
+    }
+    public void getInfoUser(String URL){
+
+        JsonArrayRequest jsonArrayRequest =  new JsonArrayRequest(URL, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                JSONObject jsonObject = null;
+                for (int i = 0; i < response.length(); i++)  {
+                    try {
+
+                        jsonObject = response.getJSONObject(i);
+                        passDBDesencriptada = Encriptar(pass) ;
+                        passDBDEencriptada = jsonObject.getString("password");
+                        Log.i(TAG, "PASS ENCRIPTADA TV " + passDBDesencriptada);
+                        Log.i(TAG, "PASS ENCRIPTADA DB " + passDBDEencriptada);
+                    if (passDBDesencriptada.equals(passDBDEencriptada)){
+                        validarUsuario("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/loginUsuario.php");
+                    }
+
+
+
+                    } catch (JSONException e) {
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }
+        );
+
+        requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonArrayRequest);
+    }
+
+    public static String Encriptar(String texto) {
+
+        String secretKey = "qualityinfosolutions"; //llave para encriptar datos
+        String base64EncryptedString = "";
+
+        try {
+
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digestOfPassword = md.digest(secretKey.getBytes("utf-8"));
+            byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
+
+            SecretKey key = new SecretKeySpec(keyBytes, "DESede");
+            Cipher cipher = Cipher.getInstance("DESede");
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+
+            byte[] plainTextBytes = texto.getBytes("utf-8");
+            byte[] buf = cipher.doFinal(plainTextBytes);
+            byte[] base64Bytes = Base64.encodeBase64(buf);
+            base64EncryptedString = new String(base64Bytes);
+
+        } catch (Exception ex) {
+        }
+        return base64EncryptedString;
+    }
+
 }

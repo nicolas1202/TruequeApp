@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +19,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
@@ -77,7 +75,7 @@ public class ProductosFragment extends Fragment {
         final Button btnAgregarProducto = root.findViewById(R.id.btnAgregarProducto);
 
 
-        rvListaProductos = root.findViewById(R.id.rvProductos);
+        rvListaProductos = root.findViewById(R.id.rvProductosI);
         rvListaProductos.setLayoutManager(new GridLayoutManager(getContext(), 1));
 
         listaProductos = new ArrayList<>();
@@ -92,7 +90,7 @@ public class ProductosFragment extends Fragment {
             }
         });
 
-        //TRAER EMAIL USUARIO SEGUN COMO SE HAYA LOGUEADO//
+        //TRAER EMAIL Y PRODUCTOS USUARIO SEGUN COMO SE HAYA LOGUEADO//
         mFirebaseAuth = FirebaseAuth.getInstance();
         user = mFirebaseAuth.getCurrentUser();
         try {
@@ -170,7 +168,7 @@ public class ProductosFragment extends Fragment {
         return root;
     }
 
-    public void ObtenerProductos(String URL) {
+    private void ObtenerProductos(String URL) {
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(URL, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
