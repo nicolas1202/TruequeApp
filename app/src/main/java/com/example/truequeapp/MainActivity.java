@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.squareup.picasso.Picasso;
 
 import androidx.annotation.ColorInt;
@@ -41,6 +43,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Console;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -53,7 +56,7 @@ public class MainActivity extends AppCompatActivity  {
     TextView tvenombre;
     ImageView imagenPerfil;
     int bandera2=0;
-final static String TAG = "BUTTON FACEBOOOOOOK";
+    final static String TAG = "BUTTON FACEBOOOOOOK";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,9 +110,6 @@ final static String TAG = "BUTTON FACEBOOOOOOK";
 
         int bandera = informacionUsuario != null ? informacionUsuario.getInt("bandera", 2) : 2;
         RecibirDatosLogin(bandera);
-
-
-
 
     }
 
@@ -182,4 +182,5 @@ final static String TAG = "BUTTON FACEBOOOOOOK";
 
         }
     }
+
 }

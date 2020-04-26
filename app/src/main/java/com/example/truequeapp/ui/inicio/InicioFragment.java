@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,10 +25,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.truequeapp.AdaptadorProductos;
+import com.example.truequeapp.MainActivity;
 import com.example.truequeapp.Producto;
 import com.example.truequeapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 
 import org.json.JSONArray;
@@ -50,6 +53,12 @@ public class InicioFragment extends Fragment {
     private FirebaseUser user;
     private FirebaseAuth mFirebaseAuth;
     private Boolean LogedInFacebook = false;
+
+    //SWIPE CARDS
+    private ArrayList<String> al; //También importé esto
+    private ArrayAdapter<String> arrayAdapter; //También importé esto
+    private int i;
+    //SWIPE CARDS
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -97,6 +106,72 @@ public class InicioFragment extends Fragment {
             getInfoUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdUser.php?email=" + emailPreferencia + "");
 
         }
+
+        //SWIPE CARDS
+        al = new ArrayList<>();
+        al.add("php");
+        al.add("c");
+        al.add("python");
+        al.add("java");
+        al.add("html");
+        al.add("c++");
+        al.add("css");
+        al.add("javascript");
+
+        arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.item, R.id.helloText, al );
+
+        SwipeFlingAdapterView flingContainer = (SwipeFlingAdapterView) root.findViewById(R.id.frame);
+
+        flingContainer.setAdapter(arrayAdapter);
+        flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
+            @Override
+            public void removeFirstObjectInAdapter() {
+                // this is the simplest way to delete an object from the Adapter (/AdapterView)
+                Log.d("LIST", "removed object!");
+                al.remove(0);
+                arrayAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onLeftCardExit(Object dataObject) {
+                //Do something on the left!
+                //You also have access to the original object.
+                //If you want to use it just cast it (String) dataObject
+                Toast.makeText(getContext(), "left", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onRightCardExit(Object dataObject) {
+                Toast.makeText(getContext(), "right", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdapterAboutToEmpty(int itemsInAdapter) {
+                // Ask for more data here
+                /*
+                al.add("XML ".concat(String.valueOf(i)));
+                arrayAdapter.notifyDataSetChanged();
+                Log.d("LIST", "notified");
+                i++;
+                */
+            }
+
+            @Override
+            public void onScroll(float scrollProgressPercent) {
+
+            }
+        });
+
+
+        // Optionally add an OnItemClickListener
+        flingContainer.setOnItemClickListener(new SwipeFlingAdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClicked(int itemPosition, Object dataObject) {
+                Toast.makeText(getContext(), "click", Toast.LENGTH_SHORT).show();
+            }
+        });
+        //SWIPE CARDS
+
         return root;
     }
 
