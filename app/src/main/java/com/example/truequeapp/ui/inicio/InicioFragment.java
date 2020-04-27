@@ -174,9 +174,13 @@ public class InicioFragment extends Fragment {
                 Log.i("TAG", "onItemSelected: " + spinner.getSelectedItem().toString());
             if (spinner.getSelectedItem().toString().equals("Seleccione un producto")){
                 cardStack.setVisibility(View.INVISIBLE);
+                btnCancel.setVisibility(View.INVISIBLE);
+                btnLove.setVisibility(View.INVISIBLE);
                 Toast.makeText(getActivity(), "Seleccione un producto para permutar", Toast.LENGTH_LONG).show();
             }else{
                 cardStack.setVisibility(View.VISIBLE);
+                btnCancel.setVisibility(View.VISIBLE);
+                btnLove.setVisibility(View.VISIBLE);
             }
             }
 

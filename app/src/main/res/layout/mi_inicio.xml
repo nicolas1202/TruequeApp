@@ -91,7 +91,7 @@
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@id/empty"
             android:contentDescription="@null"
-            android:src="@drawable/cancel" />
+            android:src="@drawable/ic_thumbdown" />
     </RelativeLayout>
 
 </RelativeLayout>
