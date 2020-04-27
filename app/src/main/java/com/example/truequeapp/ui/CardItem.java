@@ -2,18 +2,32 @@ package com.example.truequeapp.ui;
 
 public class CardItem {
 
-   private int drawableId;
+   private int Id;
     private String name;
     private String descripcion;
     private String precio;
     private String imagen;
 
-    public CardItem(int drawableId, String name, String descripcion, String precio, String imagen) {
-        this.drawableId = drawableId;
+    public CardItem(int Id, String name, String descripcion, String precio, String imagen) {
+        this.Id = Id;
         this.name = name;
         this.descripcion = descripcion;
         this.precio = precio;
         this.imagen = imagen;
+    }
+
+    public CardItem(String name, String descripcion, String precio, String imagen) {
+
+        this.name = name;
+        this.descripcion = descripcion;
+        this.precio = precio;
+        this.imagen = imagen;
+    }
+
+    public CardItem( String name) {
+
+        this.name = name;
+
     }
 
     public String getImagen() {
@@ -24,12 +38,12 @@ public class CardItem {
         this.imagen = imagen;
     }
 
-    public int getDrawableId() {
-        return drawableId;
+    public int getId() {
+        return Id;
     }
 
-    public void setDrawableId(int drawableId) {
-        this.drawableId = drawableId;
+    public void setId(int drawableId) {
+        this.Id = drawableId;
     }
 
     public String getDescripcion() {
@@ -48,15 +62,15 @@ public class CardItem {
         this.precio = precio;
     }
 
-    /*
-        public int getDrawableId() {
-            return drawableId;
+
+        public int Id() {
+            return Id;
         }
 
-        public void setDrawableId(int drawableId) {
-            this.drawableId = drawableId;
+        public void Id(int Id) {
+            this.Id = Id;
         }
-    */
+
     public String getName() {
         return name;
     }

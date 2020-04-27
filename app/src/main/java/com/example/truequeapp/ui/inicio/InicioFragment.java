@@ -10,7 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,16 +70,16 @@ public class InicioFragment extends Fragment {
     private View btnCancel;
     private View btnLove;
     private int currentPosition;
-
+    private Spinner spinner;
+    List<String> lista;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
         inicioViewModel =
                 ViewModelProviders.of(this).get(InicioViewModel.class);
-        View root = inflater.inflate(R.layout.mi_inicio, container, false);
-
-
-
+        final View root = inflater.inflate(R.layout.mi_inicio, container, false);
+        spinner =  root.findViewById(R.id.SpinerMisProductos);
+        lista = new ArrayList<String>();
 
         inicioViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -85,15 +88,23 @@ public class InicioFragment extends Fragment {
             }
         });
 
+
+
+        cardStack = root.findViewById(R.id.container);
+        btnCancel = root.findViewById(R.id.cancel);
+        btnLove = root.findViewById(R.id.love);
+        currentPosition = 0;
+
         mFirebaseAuth = FirebaseAuth.getInstance();
         user = mFirebaseAuth.getCurrentUser();
+
         try {
 
             emailFireBase = user.getEmail();
             if (emailFireBase != null) {
                 //LOGIN FACEBOOK
                 LogedInFacebook = true;
-
+                Log.i("TAG", "setCardStackAdapter: se llama desde fb");
                 getInfoUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdUser.php?email=" + user.getEmail() + "");
 
 
@@ -105,35 +116,35 @@ public class InicioFragment extends Fragment {
         recuperarPreferencias();
         if (!LogedInFacebook) {
             //lOGIN EMAIL Y CONTRASEÑA
+            Log.i("TAG", "setCardStackAdapter: se llama desde local");
             getInfoUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdUser.php?email=" + emailPreferencia + "");
 
         }
 
 
-        cardStack = (SwipeStack) root.findViewById(R.id.container);
-        btnCancel = root.findViewById(R.id.cancel);
-       btnLove = root.findViewById(R.id.love);
 
-
-        currentPosition = 0;
 
         //Handling swipe event of Cards stack
         cardStack.setListener(new SwipeStack.SwipeStackListener() {
             @Override
             public void onViewSwipedToLeft(int position) {
+                //like
+                Toast.makeText(getActivity(), "You liked " + cardItems.get(currentPosition).getId(),
+                        Toast.LENGTH_SHORT).show();
                 currentPosition = position + 1;
-                Toast.makeText(getActivity(), "LIKE", Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
             public void onViewSwipedToRight(int position) {
+                //dislike
                 currentPosition = position + 1;
                 Toast.makeText(getActivity(), "NO LIKE", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onStackEmpty() {
-                cardItems.add(new CardItem(R.drawable.triste,"¡No hay mas productos!","Vuelve pronto", "", "https://dam.ngenespanol.com/wp-content/uploads/2020/01/blue-monday.jpg"));
+                cardItems.add(new CardItem(123232,"¡No hay mas productos!","Vuelve pronto", "", "https://dam.ngenespanol.com/wp-content/uploads/2020/01/blue-monday.jpg"));
             }
         });
 
@@ -153,8 +164,27 @@ public class InicioFragment extends Fragment {
             }
         });
 
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+
+                Toast.makeText(getActivity(), spinner.getSelectedItem().toString(), Toast.LENGTH_LONG).show();
+                Log.i("TAG", "onItemSelected: " + spinner.getSelectedItem().toString());
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+
+            }
+        });
+
 
         return root;
+
     }
 
     private void ObtenerProductos(String URL) {
@@ -168,14 +198,15 @@ public class InicioFragment extends Fragment {
 
                         jsonObject = response.getJSONObject(i);
 
-                        cardItems.add(new CardItem(R.drawable.back,jsonObject.getString("nombre"),jsonObject.getString("descripcion"), jsonObject.getString("precio"), jsonObject.getString("imagen")));
+                        cardItems.add(new CardItem(Integer.parseInt(jsonObject.getString("idProduct")),jsonObject.getString("nombre"),jsonObject.getString("descripcion"), jsonObject.getString("precio"), jsonObject.getString("imagen")));
 
                     } catch (JSONException e) {
                         Toast.makeText(getActivity(), "Error en try catch obtener Productos", Toast.LENGTH_SHORT).show();
                     }
 
                 }
-                cardItems.add(new CardItem(R.drawable.triste,"¡No hay mas productos!","Vuelve pronto", "", "https://dam.ngenespanol.com/wp-content/uploads/2020/01/blue-monday.jpg"));
+                Log.i("TAG", "onResponse: Cargo los productos");
+               // cardItems.add(new CardItem(R.drawable.triste,"¡No hay mas productos!","Vuelve pronto", "", "https://dam.ngenespanol.com/wp-content/uploads/2020/01/blue-monday.jpg"));
             }
         }, new Response.ErrorListener() {
             @Override
@@ -202,18 +233,18 @@ public class InicioFragment extends Fragment {
             @Override
             public void onResponse(JSONArray response) {
                 JSONObject jsonObject = null;
-                for (int i = 0; i <= response.length(); i++) {
+                for (int i = 0; i < response.length(); i++) {
                     try {
 
                         jsonObject = response.getJSONObject(i);
                         FK_idUser = jsonObject.getString("idUsuario");
-
-
+                        setCardStackAdapter();
+                        agregarProductoSpinner();
                     } catch (JSONException e) {
                         Log.i("TAG", "onResponse: " + e.getMessage());
                     }
                 }
-                setCardStackAdapter();
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -229,12 +260,69 @@ public class InicioFragment extends Fragment {
     }
 
     private void setCardStackAdapter() {
+
+
+        Log.i("TAG", "setCardStackAdapter: Entro");
         cardItems = new ArrayList<>();
         ObtenerProductos("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getProducts.php?FK_idUser=" + FK_idUser + "");
 
+
         cardsAdapter = new CardsAdapter(getActivity(), cardItems);
         cardStack.setAdapter(cardsAdapter);
+    /*
+        cardItems = new ArrayList<>();
+
+        cardItems.add(new CardItem(R.drawable.muestra, "¡No hay mas productos!","Vuelve pronto", "", "https://dam.ngenespanol.com/wp-content/uploads/2020/01/blue-monday.jpg"));
+
+
+        cardItems.add(new CardItem(R.drawable.triste,"¡No hay mas productos!","Vuelve pronto", "", "https://dam.ngenespanol.com/wp-content/uploads/2020/01/blue-monday.jpg"));
+        cardsAdapter = new CardsAdapter(getActivity(), cardItems);
+        cardStack.setAdapter(cardsAdapter);
+*/
  }
+
+    public void agregarProductoSpinner() {
+
+
+        lista.add("Seleccione un producto");
+
+        ObtenerMisProductos("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getProductUser.php?FK_idUser=" + FK_idUser + "");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, lista);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
+
+    }
+
+    private void ObtenerMisProductos(String URL) {
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(URL, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                JSONObject jsonObject = null;
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+
+                        jsonObject = response.getJSONObject(i);
+                        lista.add(jsonObject.getString("nombre"));
+
+                    } catch (JSONException e) {
+                        Toast.makeText(getActivity(), "Error en try catch obtener Mis Productos", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("TAG", "onErrorResponse: " + error.getMessage());
+            }
+        }
+        );
+
+        requestQueue = Volley.newRequestQueue(getActivity());
+        requestQueue.add(jsonArrayRequest);
+    }
+
 
 
 }

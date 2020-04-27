@@ -9,21 +9,54 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:weightSum="1"
     android:gravity="center_vertical"
+  android:background="@color/cardview_shadow_start_color"
     >
+
+    <LinearLayout
+        android:layout_width="389dp"
+        android:layout_height="95dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/permutar_por" />
+
+        <Spinner
+            android:id="@+id/SpinerMisProductos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+
+
+    </LinearLayout>
+
+
+
     <ImageView
         android:id="@+id/imageView3"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginTop="50dp"
+        android:layout_alignTop="@+id/container"
+        android:layout_alignBottom="@+id/container"
+        android:layout_marginStart="60dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="55dp"
+        android:layout_marginBottom="45dp"
         app:srcCompat="@drawable/trueque_app_imagotipo" />
 
     <link.fls.swipestack.SwipeStack
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        app:stack_rotation="0"
-        android:backgroundTint="@color/colorPrimaryDark">
+        android:layout_height="350dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="121dp"
+        android:layout_marginBottom="116dp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        app:stack_rotation="0">
 
 
     </link.fls.swipestack.SwipeStack>
@@ -38,6 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true" />
+
 
         <ImageView
             android:id="@+id/love"
