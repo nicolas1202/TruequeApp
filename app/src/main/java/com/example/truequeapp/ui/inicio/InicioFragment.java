@@ -3,10 +3,13 @@ package com.example.truequeapp.ui.inicio;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.style.TtsSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
@@ -28,6 +31,8 @@ import com.example.truequeapp.AdaptadorProductos;
 import com.example.truequeapp.MainActivity;
 import com.example.truequeapp.Producto;
 import com.example.truequeapp.R;
+import com.example.truequeapp.ui.CardItem;
+import com.example.truequeapp.ui.CardsAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
@@ -40,12 +45,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import link.fls.swipestack.SwipeStack;
+
+
 public class InicioFragment extends Fragment {
 
     private InicioViewModel inicioViewModel;
-    private RecyclerView rvListaProductos;
-    private List<Producto> listaProductos;
-    private AdaptadorProductos adaptador;
+
+
     private RequestQueue requestQueue;
     private String FK_idUser;
     private String emailFireBase;
@@ -53,12 +60,12 @@ public class InicioFragment extends Fragment {
     private FirebaseUser user;
     private FirebaseAuth mFirebaseAuth;
     private Boolean LogedInFacebook = false;
-
-    //SWIPE CARDS
-    private ArrayList<String> al; //También importé esto
-    private ArrayAdapter<String> arrayAdapter; //También importé esto
-    private int i;
-    //SWIPE CARDS
+    private SwipeStack cardStack;
+    private CardsAdapter cardsAdapter;
+    private ArrayList<CardItem> cardItems;
+    private View btnCancel;
+    private View btnLove;
+    private int currentPosition;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -66,14 +73,6 @@ public class InicioFragment extends Fragment {
         inicioViewModel =
                 ViewModelProviders.of(this).get(InicioViewModel.class);
         View root = inflater.inflate(R.layout.mi_inicio, container, false);
-
-
-        //rvListaProductos = root.findViewById(R.id.rvProductosI);
-        //rvListaProductos.setLayoutManager(new GridLayoutManager(getContext(), 1));
-
-        listaProductos = new ArrayList<>();
-        adaptador = new AdaptadorProductos(getContext(), listaProductos);
-
 
 
         inicioViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -107,70 +106,50 @@ public class InicioFragment extends Fragment {
 
         }
 
-        //SWIPE CARDS
-        al = new ArrayList<>();
-        al.add("php");
-        al.add("c");
-        al.add("python");
-        al.add("java");
-        al.add("html");
-        al.add("c++");
-        al.add("css");
-        al.add("javascript");
 
-        arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.item, R.id.helloText, al );
+        cardStack = (SwipeStack) root.findViewById(R.id.container);
+        btnCancel = root.findViewById(R.id.cancel);
+       btnLove = root.findViewById(R.id.love);
 
-        SwipeFlingAdapterView flingContainer = (SwipeFlingAdapterView) root.findViewById(R.id.frame);
+       setCardStackAdapter();
+        currentPosition = 0;
 
-        flingContainer.setAdapter(arrayAdapter);
-        flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
+        //Handling swipe event of Cards stack
+        cardStack.setListener(new SwipeStack.SwipeStackListener() {
             @Override
-            public void removeFirstObjectInAdapter() {
-                // this is the simplest way to delete an object from the Adapter (/AdapterView)
-                Log.d("LIST", "removed object!");
-                al.remove(0);
-                arrayAdapter.notifyDataSetChanged();
+            public void onViewSwipedToLeft(int position) {
+                currentPosition = position + 1;
+                Toast.makeText(getActivity(), "LIKE", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onLeftCardExit(Object dataObject) {
-                //Do something on the left!
-                //You also have access to the original object.
-                //If you want to use it just cast it (String) dataObject
-                Toast.makeText(getContext(), "left", Toast.LENGTH_SHORT).show();
+            public void onViewSwipedToRight(int position) {
+                currentPosition = position + 1;
+                Toast.makeText(getActivity(), "NO LIKE", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onRightCardExit(Object dataObject) {
-                Toast.makeText(getContext(), "right", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onAdapterAboutToEmpty(int itemsInAdapter) {
-                // Ask for more data here
-                /*
-                al.add("XML ".concat(String.valueOf(i)));
-                arrayAdapter.notifyDataSetChanged();
-                Log.d("LIST", "notified");
-                i++;
-                */
-            }
-
-            @Override
-            public void onScroll(float scrollProgressPercent) {
+            public void onStackEmpty() {
 
             }
         });
 
-
-        // Optionally add an OnItemClickListener
-        flingContainer.setOnItemClickListener(new SwipeFlingAdapterView.OnItemClickListener() {
+      btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClicked(int itemPosition, Object dataObject) {
-                Toast.makeText(getContext(), "click", Toast.LENGTH_SHORT).show();
+            public void onClick(View view) {
+                cardStack.swipeTopViewToRight();
             }
         });
-        //SWIPE CARDS
+
+        btnLove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(), "You liked " + cardItems.get(currentPosition).getName(),
+                        Toast.LENGTH_SHORT).show();
+                cardStack.swipeTopViewToLeft();
+            }
+        });
+
 
         return root;
     }
@@ -180,29 +159,20 @@ public class InicioFragment extends Fragment {
             @Override
             public void onResponse(JSONArray response) {
                 JSONObject jsonObject = null;
+
                 for (int i = 0; i < response.length(); i++) {
                     try {
 
                         jsonObject = response.getJSONObject(i);
-                        listaProductos.add(
-                                new Producto(
-                                        Integer.parseInt(jsonObject.getString("idProduct")),
-                                        jsonObject.getString("nombre"),
-                                        jsonObject.getString("descripcion"),
-                                        // fotoProducto = jsonObject.getString("imagen"),
-                                        jsonObject.getString("precio")
-                                )
-                        );
 
-
-                        //rvListaProductos.setAdapter(adaptador);
-
+                        cardItems.add(new CardItem(R.drawable.back,jsonObject.getString("nombre"),jsonObject.getString("descripcion"), jsonObject.getString("precio")));
 
                     } catch (JSONException e) {
                         Toast.makeText(getActivity(), "Error en try catch obtener Productos", Toast.LENGTH_SHORT).show();
                     }
 
                 }
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -240,7 +210,7 @@ public class InicioFragment extends Fragment {
                         Log.i("TAG", "onResponse: " + e.getMessage());
                     }
                 }
-                ObtenerProductos("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getProducts.php?FK_idUser=" + FK_idUser + "");
+                setCardStackAdapter();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -254,4 +224,13 @@ public class InicioFragment extends Fragment {
 
 
     }
+
+    private void setCardStackAdapter() {
+        cardItems = new ArrayList<>();
+        ObtenerProductos("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getProducts.php?FK_idUser=" + FK_idUser + "");
+        cardsAdapter = new CardsAdapter(getActivity(), cardItems);
+        cardStack.setAdapter(cardsAdapter);
+ }
+
+
 }

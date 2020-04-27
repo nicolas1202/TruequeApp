@@ -106,6 +106,8 @@ public class MainActivity extends AppCompatActivity  {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+
+
         Bundle informacionUsuario = getIntent().getExtras();
 
         int bandera = informacionUsuario != null ? informacionUsuario.getInt("bandera", 2) : 2;

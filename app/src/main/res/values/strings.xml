@@ -31,5 +31,10 @@
 
     <string name="facebook_app_id">533319260708766</string>
     <string name="fb_login_protocol_scheme">fb533319260708766</string>
+    <string name="mis_matches">Mis Matches</string>
+    <string name="otras_acci_nes">Otras acciónes</string>
+    <string name="mis_productos">Mis Productos</string>
+    <string name="inicio">Inicio</string>
+    <string name="cerrar_sesi_n">Cerrar Sesión</string>
 
 </resources>
