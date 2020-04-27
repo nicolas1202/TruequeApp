@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -75,6 +76,8 @@ public class InicioFragment extends Fragment {
         View root = inflater.inflate(R.layout.mi_inicio, container, false);
 
 
+
+
         inicioViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -130,7 +133,7 @@ public class InicioFragment extends Fragment {
 
             @Override
             public void onStackEmpty() {
-
+                cardItems.add(new CardItem(R.drawable.triste,"¡No hay mas productos!","Vuelve pronto", "", "https://dam.ngenespanol.com/wp-content/uploads/2020/01/blue-monday.jpg"));
             }
         });
 
@@ -165,14 +168,14 @@ public class InicioFragment extends Fragment {
 
                         jsonObject = response.getJSONObject(i);
 
-                        cardItems.add(new CardItem(R.drawable.back,jsonObject.getString("nombre"),jsonObject.getString("descripcion"), jsonObject.getString("precio")));
+                        cardItems.add(new CardItem(R.drawable.back,jsonObject.getString("nombre"),jsonObject.getString("descripcion"), jsonObject.getString("precio"), jsonObject.getString("imagen")));
 
                     } catch (JSONException e) {
                         Toast.makeText(getActivity(), "Error en try catch obtener Productos", Toast.LENGTH_SHORT).show();
                     }
 
                 }
-
+                cardItems.add(new CardItem(R.drawable.triste,"¡No hay mas productos!","Vuelve pronto", "", "https://dam.ngenespanol.com/wp-content/uploads/2020/01/blue-monday.jpg"));
             }
         }, new Response.ErrorListener() {
             @Override
@@ -228,6 +231,7 @@ public class InicioFragment extends Fragment {
     private void setCardStackAdapter() {
         cardItems = new ArrayList<>();
         ObtenerProductos("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getProducts.php?FK_idUser=" + FK_idUser + "");
+
         cardsAdapter = new CardsAdapter(getActivity(), cardItems);
         cardStack.setAdapter(cardsAdapter);
  }

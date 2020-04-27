@@ -6,14 +6,14 @@ public class Producto {
     String nombre;
     String descripcion;
     String precio;
-   // String foto;
+    String foto;
 
-    public Producto(int id, String nombre, String descripcion, String precio /*, String foto*/) {
+    public Producto(int id, String nombre, String descripcion, String precio , String foto) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
-      //  this.foto = foto;
+        this.foto = foto;
     }
 
    public int getId() {
@@ -48,13 +48,13 @@ public class Producto {
         this.precio = precio;
     }
 
-   /* public String getFoto() {
+    public String getFoto() {
         return foto;
     }
 
     public void setFoto(String foto) {
         this.foto = foto;
-    }*/
+    }
 
 
 }

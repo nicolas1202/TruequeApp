@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,15 +64,18 @@ public class ProductosFragment extends Fragment {
     //variables productos cardview
     int idProducto;
     private String nombreProducto;
+    private String fotoProducto;
     private String descripcionProducto;
     private String precioProducto;
     private boolean bandera = false;
-
+    String name ;
+    String desc ;
+    String precio ;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         productosViewModel =
                 ViewModelProviders.of(this).get(ProductosViewModel.class);
-        View root = inflater.inflate(R.layout.mis_productos, container, false);
+        final View root = inflater.inflate(R.layout.mis_productos, container, false);
         final Button btnAgregarProducto = root.findViewById(R.id.btnAgregarProducto);
 
 
@@ -119,21 +123,71 @@ public class ProductosFragment extends Fragment {
         btnAgregarProducto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                LayoutInflater inflater = getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.add_product, null);
+
+                // Specify alert dialog is not cancelable/not ignorable
+                builder.setCancelable(false);
+
+                // Set the custom layout as alert dialog view
+                builder.setView(dialogView);
+
+                // Get the custom alert dialog view widgets reference
+                Button btn_positive = (Button) dialogView.findViewById(R.id.btnAceptarProducto);
+                Button btn_negative = (Button) dialogView.findViewById(R.id.btnCancelar);
+                final EditText etNombre = dialogView.findViewById(R.id.etNombreProd);
+                final EditText etDescrip = dialogView.findViewById(R.id.etDescrProd);
+                final EditText etPrecio = dialogView.findViewById(R.id.etPrecioProd);
+
+                // Create the alert dialog
+                final AlertDialog dialog = builder.create();
+
+                // Set positive/yes button click listener
+                btn_positive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Dismiss the alert dialog
+                        dialog.cancel();
+                         name = etNombre.getText().toString();
+                         desc = etDescrip.getText().toString();
+                         precio = etPrecio.getText().toString();
+                        Toast.makeText(getActivity(),
+                                "Submitted name : " + name, Toast.LENGTH_SHORT).show();
+                        // Say hello to the submitter
+                        if (LogedInFacebook) {
+
+                            ejecutarServicio("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/InsertProducto.php", false);
+                            listaProductos.clear();
+                            getInfoUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdUser.php?email=" + user.getEmail() + "");
+
+                        } else {
+                            //Insertar producto logeado con email
+                            recuperarPreferencias();
+                            ejecutarServicio("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/InsertProducto.php", false);
+                            listaProductos.clear();
+                            getInfoUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdUser.php?email=" + emailPreferencia + "");
+                        }
+                    }
+                });
+
+                // Set negative/no button click listener
+             btn_negative.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Dismiss/cancel the alert dialog
+                        //dialog.cancel();
+                        dialog.dismiss();
+
+                    }
+                });
+
+                // Display the custom alert dialog on interface
+                dialog.show();
 
                 //Insertar producto logeado con facebook
-                if (LogedInFacebook) {
 
-                    ejecutarServicio("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/InsertProducto.php", false);
-                    listaProductos.clear();
-                    getInfoUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdUser.php?email=" + user.getEmail() + "");
-
-                } else {
-                    //Insertar producto logeado con email
-                    recuperarPreferencias();
-                    ejecutarServicio("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/InsertProducto.php", false);
-                    listaProductos.clear();
-                    getInfoUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdUser.php?email=" + emailPreferencia + "");
-                }
 
             }
         });
@@ -182,8 +236,9 @@ public class ProductosFragment extends Fragment {
                                         idProducto = Integer.parseInt(jsonObject.getString("idProduct")),
                                         nombreProducto = jsonObject.getString("nombre"),
                                         descripcionProducto = jsonObject.getString("descripcion"),
-                                        // fotoProducto = jsonObject.getString("imagen"),
-                                        precioProducto = jsonObject.getString("precio")
+                                        precioProducto = jsonObject.getString("precio"),
+                                        fotoProducto = jsonObject.getString("imagen")
+
                                 )
                         );
 
@@ -277,10 +332,10 @@ public class ProductosFragment extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("nombre", "Guitarra Criolla");
-                parametros.put("descripcion", "Modelo 2015");
-                parametros.put("imagen", "String de la imagen del producto");
-                parametros.put("precio", "5400");
+                parametros.put("nombre", name);
+                parametros.put("descripcion", desc);
+                parametros.put("imagen", "https://static.mercadoshops.com/guitarra-criolla-admira-paloma-palermo_iZ1075530178XvZgrandeXpZ3XfZ246744778-799583688-3XsZ246744778xIM.jpg");
+                parametros.put("precio", precio);
                 parametros.put("FK_idUser", FK_idUser);
                 Log.i(TAG, "getParams: " + FK_idUser);
                 return parametros;

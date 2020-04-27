@@ -7,14 +7,26 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:gravity="center_vertical"
+    >
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="50dp"
+        app:srcCompat="@drawable/trueque_app_imagotipo" />
 
     <link.fls.swipestack.SwipeStack
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="500dp"
         app:stack_rotation="0"
-        android:backgroundTint="@color/colorPrimaryDark"/>
+        android:backgroundTint="@color/colorPrimaryDark">
+
+
+    </link.fls.swipestack.SwipeStack>
 
     <RelativeLayout
         android:layout_width="match_parent"

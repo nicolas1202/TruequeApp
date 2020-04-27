@@ -6,12 +6,22 @@ public class CardItem {
     private String name;
     private String descripcion;
     private String precio;
+    private String imagen;
 
-    public CardItem(int drawableId, String name, String descripcion, String precio) {
+    public CardItem(int drawableId, String name, String descripcion, String precio, String imagen) {
         this.drawableId = drawableId;
         this.name = name;
         this.descripcion = descripcion;
         this.precio = precio;
+        this.imagen = imagen;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 
     public int getDrawableId() {

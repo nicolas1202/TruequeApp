@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.truequeapp.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -64,9 +65,9 @@ public class CardsAdapter  extends BaseAdapter {
         holder.name.setText(getItem(position).getName());
         holder.descripcion.setText(getItem(position).getDescripcion());
         holder.precio.setText("$ " + getItem(position).getPrecio());
-        holder.avatar.setImageBitmap(decodeSampledBitmapFromResource(activity.getResources(),
-                getItem(position).getDrawableId(), AVATAR_WIDTH, AVATAR_HEIGHT));
-
+        //holder.avatar.setImageBitmap(decodeSampledBitmapFromResource(activity.getResources(),
+          //      getItem(position).getDrawableId(), AVATAR_WIDTH, AVATAR_HEIGHT));
+        Picasso.get().load(data.get(position).getImagen()).into(holder.avatar);
         return convertView;
     }
 
