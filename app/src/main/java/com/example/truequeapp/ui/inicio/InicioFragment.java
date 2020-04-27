@@ -111,7 +111,7 @@ public class InicioFragment extends Fragment {
         btnCancel = root.findViewById(R.id.cancel);
        btnLove = root.findViewById(R.id.love);
 
-       setCardStackAdapter();
+
         currentPosition = 0;
 
         //Handling swipe event of Cards stack
