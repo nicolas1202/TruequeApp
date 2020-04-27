@@ -81,7 +81,7 @@
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/empty"
             android:contentDescription="@null"
-            android:src="@drawable/love" />
+            android:src="@drawable/ic_thumb" />
 
         <ImageView
             android:id="@+id/cancel"

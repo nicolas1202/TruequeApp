@@ -170,9 +170,14 @@ public class InicioFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
 
-                Toast.makeText(getActivity(), spinner.getSelectedItem().toString(), Toast.LENGTH_LONG).show();
-                Log.i("TAG", "onItemSelected: " + spinner.getSelectedItem().toString());
 
+                Log.i("TAG", "onItemSelected: " + spinner.getSelectedItem().toString());
+            if (spinner.getSelectedItem().toString().equals("Seleccione un producto")){
+                cardStack.setVisibility(View.INVISIBLE);
+                Toast.makeText(getActivity(), "Seleccione un producto para permutar", Toast.LENGTH_LONG).show();
+            }else{
+                cardStack.setVisibility(View.VISIBLE);
+            }
             }
 
             @Override
