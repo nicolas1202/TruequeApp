@@ -28,10 +28,10 @@
 
         <EditText
             android:id="@+id/etUsername"
-            android:layout_width="272dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="96dp"
+            android:layout_marginTop="40dp"
             android:layout_marginEnd="24dp"
 
             android:hint="@string/prompt_email"
@@ -40,7 +40,7 @@
 
         <EditText
             android:id="@+id/etPassword"
-            android:layout_width="274dp"
+            android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
@@ -65,8 +65,8 @@
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/login_button"
-            android:layout_width="286dp"
-            android:layout_height="48dp"
+            android:layout_width="375dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="30dp"
@@ -76,7 +76,7 @@
             android:id="@+id/btnLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#E91E63"
+            android:background="#ffa41b"
             android:text="Iniciar Sesión"
             android:textColor="#FFFFFF" />
 
