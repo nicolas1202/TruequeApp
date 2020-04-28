@@ -1,5 +1,6 @@
 package com.example.truequeapp;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -88,8 +90,8 @@ public class MainActivity extends AppCompatActivity  {
             }
         });
 
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        // navigationView = findViewById(R.id.nav_view);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         tvemail = (TextView) headerView.findViewById(R.id.et_EmailUsuario);

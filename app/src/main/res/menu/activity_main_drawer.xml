@@ -19,7 +19,7 @@
             android:icon="@drawable/ic_thumb"
             android:title="@string/mis_matches" />
 
-        <item
+        <Button
             android:id="@+id/idCerrarSesion"
             android:icon="@drawable/logout"
             android:title="@string/cerrar_sesi_n" />
