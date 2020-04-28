@@ -1,6 +1,7 @@
 package com.example.truequeapp.ui.inicio;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.style.TtsSpan;
@@ -26,10 +27,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.truequeapp.AdaptadorProductos;
 import com.example.truequeapp.MainActivity;
@@ -37,6 +41,7 @@ import com.example.truequeapp.Producto;
 import com.example.truequeapp.R;
 import com.example.truequeapp.ui.CardItem;
 import com.example.truequeapp.ui.CardsAdapter;
+import com.example.truequeapp.ui.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
@@ -47,7 +52,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import link.fls.swipestack.SwipeStack;
 
@@ -72,6 +79,10 @@ public class InicioFragment extends Fragment {
     private int currentPosition;
     private Spinner spinner;
     List<String> lista;
+    private String emailguardado;
+    private int idStack;
+    private String nombreProductoSpinner;
+    private String idProducto;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
@@ -106,7 +117,7 @@ public class InicioFragment extends Fragment {
                 LogedInFacebook = true;
                 Log.i("TAG", "setCardStackAdapter: se llama desde fb");
                 getInfoUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdUser.php?email=" + user.getEmail() + "");
-
+                emailguardado =  user.getEmail();
 
             }
         } catch (Exception e) {
@@ -118,7 +129,7 @@ public class InicioFragment extends Fragment {
             //lOGIN EMAIL Y CONTRASEÑA
             Log.i("TAG", "setCardStackAdapter: se llama desde local");
             getInfoUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdUser.php?email=" + emailPreferencia + "");
-
+            emailguardado =  emailPreferencia;
         }
 
 
@@ -129,10 +140,21 @@ public class InicioFragment extends Fragment {
             @Override
             public void onViewSwipedToLeft(int position) {
                 //like
-                Toast.makeText(getActivity(), "You liked " + cardItems.get(currentPosition).getId(),
-                        Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getActivity(), "You liked " + cardItems.get(currentPosition).getId(),
+                    //    Toast.LENGTH_SHORT).show();
+
+                nombreProductoSpinner = spinner.getSelectedItem().toString();
+                //Obtener idProducto Stack
+                idStack =  cardItems.get(currentPosition).getId();
+
+
                 currentPosition = position + 1;
 
+                //Obtener FK_IdUser y Obtener ID producto Spinner
+                getIdUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdUser.php?email=" + emailguardado + "");
+
+
+                //Insertar en matches
             }
 
             @Override
@@ -144,7 +166,7 @@ public class InicioFragment extends Fragment {
 
             @Override
             public void onStackEmpty() {
-                cardItems.add(new CardItem(123232,"¡No hay mas productos!","Vuelve pronto", "", "https://dam.ngenespanol.com/wp-content/uploads/2020/01/blue-monday.jpg"));
+                cardItems.add(new CardItem(999999999,"¡No hay mas productos!","Vuelve pronto", "", "https://dam.ngenespanol.com/wp-content/uploads/2020/01/blue-monday.jpg"));
             }
         });
 
@@ -158,8 +180,7 @@ public class InicioFragment extends Fragment {
         btnLove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "You liked " + cardItems.get(currentPosition).getName(),
-                        Toast.LENGTH_SHORT).show();
+
                 cardStack.swipeTopViewToLeft();
             }
         });
@@ -332,6 +353,98 @@ public class InicioFragment extends Fragment {
         requestQueue.add(jsonArrayRequest);
     }
 
+    private void ObtenerIdProducto(String URL) {
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(URL, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                JSONObject jsonObject = null;
+
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+
+                        jsonObject = response.getJSONObject(i);
+                        jsonObject.getString("idProduct");
+                        if (cardItems.get(currentPosition).getId() != 999999999){
+                            ejecutarServicio( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/insertMatch.php",jsonObject.getString("idProduct") );
+
+                        }
 
 
+                    } catch (JSONException e) {
+                        Toast.makeText(getActivity(), "Error en try catch obtener Productos", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+                // cardItems.add(new CardItem(R.drawable.triste,"¡No hay mas productos!","Vuelve pronto", "", "https://dam.ngenespanol.com/wp-content/uploads/2020/01/blue-monday.jpg"));
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("TAG", "Error obtener id producto " + error.getMessage());
+            }
+        }
+        );
+
+        requestQueue = Volley.newRequestQueue(getActivity());
+        requestQueue.add(jsonArrayRequest);
+    }
+
+    private void getIdUser(String URL) {
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(URL, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                JSONObject jsonObject = null;
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+
+                        jsonObject = response.getJSONObject(i);
+                        FK_idUser = jsonObject.getString("idUsuario");
+                        ObtenerIdProducto("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdProductSpinner.php?FK_idUser=" + FK_idUser + "&nombre="+nombreProductoSpinner +"");
+
+                    } catch (JSONException e) {
+                        Log.i("TAG", "onResponse: " + e.getMessage());
+                    }
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }
+        );
+        requestQueue = Volley.newRequestQueue(getContext());
+        requestQueue.add(jsonArrayRequest);
+
+
+    }
+    private void ejecutarServicio(String URL, final String id){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(getActivity(), "Like guardado", Toast.LENGTH_SHORT).show();
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("TAG", "error al insertar match");
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String,String> parametros = new HashMap<String, String>();
+                parametros.put("FK_idMiProducto", id);
+                parametros.put("FK_idProductoLike", String.valueOf(idStack) );
+                return parametros;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        requestQueue.add(stringRequest);
+    }
 }
