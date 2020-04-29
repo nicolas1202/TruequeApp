@@ -16,8 +16,8 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="16dp">
+        tools:layout_editor_absoluteX="-44dp"
+        tools:layout_editor_absoluteY="-62dp">
 
         <ImageView
             android:id="@+id/imageView"
@@ -31,13 +31,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             app:errorEnabled="true">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_email"
                 android:inputType="textEmailAddress"
-                android:selectAllOnFocus="true">
-            </com.google.android.material.textfield.TextInputEditText>
+                android:selectAllOnFocus="true"></com.google.android.material.textfield.TextInputEditText>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -47,6 +47,7 @@
             android:layout_marginTop="10dp"
             app:errorEnabled="true"
             app:passwordToggleEnabled="true">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -54,8 +55,7 @@
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
-                android:selectAllOnFocus="true">
-            </com.google.android.material.textfield.TextInputEditText>
+                android:selectAllOnFocus="true"></com.google.android.material.textfield.TextInputEditText>
         </com.google.android.material.textfield.TextInputLayout>
 
         <ProgressBar
@@ -75,13 +75,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:textColor="#FF0000"
             android:text="Email y/o contraseña incorrecto/s"
-            android:visibility="invisible"/>
+            android:textColor="#FF0000"
+            android:visibility="invisible" />
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/login_button"
-            android:layout_width="375dp"
+            android:layout_width="341dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
@@ -94,8 +94,8 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/btn_rounded"
             android:backgroundTint="#ffa41b"
-            android:textColor="#FFFFFF"
-            android:text="Iniciar Sesión"/>
+            android:text="Iniciar Sesión"
+            android:textColor="#FFFFFF" />
 
         <Button
             android:id="@+id/btnRegistro"
@@ -104,8 +104,8 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/btn_rounded"
             android:backgroundTint="#A9A9A9"
-            android:textColor="#FFFFFF"
-            android:text="Registrarse"/>
+            android:text="Registrarse"
+            android:textColor="#FFFFFF" />
 
     </LinearLayout>
 

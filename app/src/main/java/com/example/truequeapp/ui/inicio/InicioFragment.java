@@ -66,6 +66,7 @@ public class InicioFragment extends Fragment {
 
     private RequestQueue requestQueue;
     private String FK_idUser;
+    private int  count;
     private String emailFireBase;
     private String emailPreferencia;
     private FirebaseUser user;
@@ -366,7 +367,7 @@ public class InicioFragment extends Fragment {
                         jsonObject.getString("idProduct");
                         if (cardItems.get(currentPosition).getId() != 999999999){
                             ejecutarServicio( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/insertMatch.php",jsonObject.getString("idProduct") );
-
+                            getInfoMatch( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/verificarMatch.php?FK_idMiProducto=" + jsonObject.getString("idProduct") + "&FK_idProductoLike="+ idStack  +"");
                         }
 
 
@@ -426,8 +427,8 @@ public class InicioFragment extends Fragment {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(getActivity(), "Like guardado", Toast.LENGTH_SHORT).show();
 
+                    Toast.makeText(getActivity(), "Like guardado", Toast.LENGTH_SHORT).show();
 
             }
         }, new Response.ErrorListener() {
@@ -447,5 +448,39 @@ public class InicioFragment extends Fragment {
         };
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         requestQueue.add(stringRequest);
+    }
+
+    private void getInfoMatch(String URL) {
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(URL, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                JSONObject jsonObject = null;
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+
+                        jsonObject = response.getJSONObject(i);
+                        count = Integer.parseInt(jsonObject.getString("cc"));
+                        Log.i("count", "COUNT DB" + Integer.parseInt(jsonObject.getString("cc")));
+                        if (count == 2){
+                            Toast.makeText(getActivity(), "¡¡¡MATCH!!!", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        Log.i("TAG", "onResponse: " + e.getMessage());
+                    }
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }
+        );
+        requestQueue = Volley.newRequestQueue(getContext());
+        requestQueue.add(jsonArrayRequest);
+
+
     }
 }
