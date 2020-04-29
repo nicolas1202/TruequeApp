@@ -19,38 +19,44 @@
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="16dp">
 
-
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="207dp"
             android:layout_height="186dp"
             app:srcCompat="@drawable/trueque_app_imagotipo" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/etUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginTop="30dp"
+            app:errorEnabled="true">
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_email"
+                android:inputType="textEmailAddress"
+                android:selectAllOnFocus="true">
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
 
-            android:hint="@string/prompt_email"
-            android:inputType="textEmailAddress"
-            android:selectAllOnFocus="true" />
-
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-
-            android:hint="@string/prompt_password"
-            android:imeActionLabel="@string/action_sign_in_short"
-            android:imeOptions="actionDone"
-            android:inputType="textPassword"
-            android:selectAllOnFocus="true" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:errorEnabled="true"
+            app:passwordToggleEnabled="true">
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Contraseña"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:selectAllOnFocus="true">
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <ProgressBar
             android:id="@+id/loading"
@@ -63,29 +69,43 @@
             android:layout_marginBottom="64dp"
             android:visibility="gone" />
 
+        <TextView
+            android:id="@+id/EmailPassIncorrectMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textColor="#FF0000"
+            android:text="Email y/o contraseña incorrecto/s"
+            android:visibility="invisible"/>
+
         <com.facebook.login.widget.LoginButton
             android:id="@+id/login_button"
             android:layout_width="375dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginTop="10dp"
             tools:ignore="MissingConstraints" />
 
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ffa41b"
-            android:text="Iniciar Sesión"
-            android:textColor="#FFFFFF" />
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btn_rounded"
+            android:backgroundTint="#ffa41b"
+            android:textColor="#FFFFFF"
+            android:text="Iniciar Sesión"/>
 
         <Button
             android:id="@+id/btnRegistro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Registrarse"
-            android:textColor="#FFFFFF" />
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btn_rounded"
+            android:backgroundTint="#A9A9A9"
+            android:textColor="#FFFFFF"
+            android:text="Registrarse"/>
 
     </LinearLayout>
 

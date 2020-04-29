@@ -75,21 +75,17 @@ public class MainActivity extends AppCompatActivity  {
 
             @Override
             public void onClick(View view) {
-
-                    Toast.makeText(getApplicationContext(),"FB", Toast.LENGTH_SHORT).show();
-                    FirebaseAuth.getInstance().signOut();
-                    LoginManager.getInstance().logOut();
-                    bandera2 =0;
-                    SharedPreferences preferences = getSharedPreferences("preferenciasLogin", Context.MODE_PRIVATE);
-                    preferences.edit().clear().commit();
-                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(i);
-                    finish();
-
-
+            Toast.makeText(getApplicationContext(),"FB", Toast.LENGTH_SHORT).show();
+            FirebaseAuth.getInstance().signOut();
+            LoginManager.getInstance().logOut();
+            bandera2 =0;
+            SharedPreferences preferences = getSharedPreferences("preferenciasLogin", Context.MODE_PRIVATE);
+            preferences.edit().clear().commit();
+            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(i);
+            finish();
             }
         });
-
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -107,7 +103,6 @@ public class MainActivity extends AppCompatActivity  {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
 
 
         Bundle informacionUsuario = getIntent().getExtras();
@@ -147,7 +142,6 @@ public class MainActivity extends AppCompatActivity  {
                         Log.i("nombre000",jsonObject.getString("nombre"));
                         //apellidoDB = (jsonObject.getString("apellido"));
 
-
                     } catch (JSONException e) {
                         Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -176,7 +170,6 @@ public class MainActivity extends AppCompatActivity  {
             tvemail.setText(setEmailFB);
             tvenombre.setText(setNombreFB);
             Picasso.get().load(setImagenFB).into(imagenPerfil);
-
 
         }else{
             SharedPreferences preferences = getSharedPreferences("preferenciasLogin", Context.MODE_PRIVATE);

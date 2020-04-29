@@ -12,6 +12,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,6 +49,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -68,8 +70,9 @@ import javax.crypto.spec.SecretKeySpec;
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
-    EditText et_username;
-    EditText et_password;
+    private TextInputLayout et_username;
+    private TextInputLayout et_password;
+    private TextView email_pass_incorrect_message;
     Button btnLoginDB;
     Button btnRegistro;
     String email;
@@ -99,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
-
+        getSupportActionBar().hide(); //Quitar barra superior Sign in
 
     //-----------------------------------------------------//
         //FACEBOOK
@@ -157,27 +160,25 @@ public class LoginActivity extends AppCompatActivity {
         // FIN FACEBOOK
         //-----------------------------------------------------//
 
-
-
-
-        et_password = findViewById(R.id.etPassword);
         et_username = findViewById(R.id.etUsername);
+        et_password = findViewById(R.id.etPassword);
+        email_pass_incorrect_message = findViewById(R.id.EmailPassIncorrectMessage);
+
         btnLoginDB = findViewById(R.id.btnLogin);
         btnRegistro = findViewById(R.id.btnRegistro);
         recuperarPreferencias();
 
-
         btnLoginDB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                email = et_username.getText().toString();
-                pass = et_password.getText().toString();
-                if (!email.isEmpty() && !pass.isEmpty()){
-                    getInfoUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getInfoUser.php?email="+email+"");
-
-                }else{
-                    Toast.makeText(getApplicationContext(), "Ingrese usuario o contraseña", Toast.LENGTH_LONG).show();
+                if(!validateEmail() | !validatePassword()) { //Debe ir una sola barra para que muestre ambos mensajes
+                    email_pass_incorrect_message.setVisibility(View.INVISIBLE);
+                    return;
                 }
+                email = et_username.getEditText().getText().toString().trim();
+                pass = et_password.getEditText().getText().toString().trim();
+                getInfoUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getInfoUser.php?email="+email+"");
+
             }
         });
 
@@ -189,6 +190,35 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    //CAMBIOS
+    private boolean validateEmail() {
+        String emailInput = et_username.getEditText().getText().toString().trim();
+
+        if(emailInput.isEmpty()) {
+            et_username.setError("El campo no puede estar vacío");
+            return false;
+        } else if(!Patterns.EMAIL_ADDRESS.matcher(emailInput).matches()) {
+            et_username.setError("Por favor inserta un email");
+            return false;
+        } else {
+            et_username.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validatePassword() {
+        String passwordInput = et_password.getEditText().getText().toString().trim();
+
+        if (passwordInput.isEmpty()) {
+            et_password.setError("El campo no puede estar vacío");
+            return false;
+        } else {
+            et_password.setError(null);
+            return true;
+        }
+    }
+    //CAMBIOS/
 
     private void handleFacebookToken(AccessToken token){
         Log.d(TAG, "handleFacebookToken" + token);
@@ -252,9 +282,6 @@ public class LoginActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
 
-
-
-
     }
 
     private void UpdateUI(FirebaseUser user){
@@ -286,8 +313,6 @@ public class LoginActivity extends AppCompatActivity {
         if (authStateListener != null){
             mFirebaseAuth.removeAuthStateListener(authStateListener);
         }
-
-
     }
 
     private void validarUsuario(String URL){
@@ -302,8 +327,6 @@ public class LoginActivity extends AppCompatActivity {
                     i.putExtra("bandera", banderaFacebookOno);
                     startActivity(i);
                     finish();
-                }else{
-                    Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrectos", Toast.LENGTH_LONG).show();
                 }
             }
         }, new Response.ErrorListener() {
@@ -341,8 +364,8 @@ public class LoginActivity extends AppCompatActivity {
     private void recuperarPreferencias(){
         SharedPreferences preferences = getSharedPreferences("preferenciasLogin", Context.MODE_PRIVATE);
 
-        et_username.setText(preferences.getString("email", "micorreo@gmail.com"));
-        et_password.setText(preferences.getString("password", "micontraseña"));
+        //et_username.setEditText(preferences.getString("email", "micorreo@gmail.com"));
+        //et_password.setText(preferences.getString("password", "micontraseña"));
     }
 
     public static String Desencriptar(String textoEncriptado)  {
@@ -396,7 +419,7 @@ public class LoginActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                email_pass_incorrect_message.setVisibility(View.VISIBLE); //Si no coinciden con la base de datos mostrar activando este mensaje
             }
         }
         );
