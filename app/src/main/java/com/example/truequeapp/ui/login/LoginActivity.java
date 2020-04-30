@@ -89,10 +89,12 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "FacebookAuthentication";
     private FirebaseAuth.AuthStateListener authStateListener;
     FirebaseUser user;
+    String idlocal;
 
     String nombreFB;
     String emailFB;
     String imagenPerfil;
+    String idFace;
     //FIN VARIABLES FACEBOOK
 
 
@@ -238,6 +240,7 @@ public class LoginActivity extends AppCompatActivity {
                     intent.putExtra("ImagenPerfil", imagenPerfil);
                     intent.putExtra("bandera", banderaFacebookOno);
                     RegistrarUsuarioFacebook("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/insertUsuarioFB.php", nombreFB, emailFB, imagenPerfil, intent);
+                    getIdUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getInfoUser.php?email="+emailFB+"");
                     //startActivity(intent);
                 }else{
                     Log.d(TAG, "Sign in with credentials: Failure", task.getException());
@@ -296,7 +299,7 @@ public class LoginActivity extends AppCompatActivity {
                 //Picasso.get().load(photoURL).into(mLogo);
             }
         }else{
-           Toast.makeText(getApplicationContext(), "Datos usuario vacios QUITAR MENSAJE", Toast.LENGTH_LONG).show();
+          // Toast.makeText(getApplicationContext(), "Datos usuario vacios QUITAR MENSAJE", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -315,14 +318,14 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void validarUsuario(String URL){
+    private void validarUsuario(String URL, final String id){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 //vemos que la respuesta no venga vacia
                 if (!response.isEmpty()){
                     banderaFacebookOno = 2;
-                    guardarPreferencias();
+                    guardarPreferencias(id);
                     Intent i = new Intent(getApplicationContext(), MainActivity.class);
                     i.putExtra("bandera", banderaFacebookOno);
                     startActivity(i);
@@ -350,13 +353,24 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //Proceso para guardar email y contraseña para que no tenga que ingresarlo cada vez que abre la app
-    private void guardarPreferencias(){
+    private void guardarPreferencias(String id){
         SharedPreferences preferences = getSharedPreferences("preferenciasLogin", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
         editor.putString("email", email);
         editor.putString("password", pass);
+        editor.putString("idlocal", id);
         editor.putBoolean("sesion", true);
+        editor.commit();
+    }
+
+    //Proceso para guardar email y contraseña para que no tenga que ingresarlo cada vez que abre la app
+    private void guardarPreferenciasFacebook(String id){
+        SharedPreferences preferences = getSharedPreferences("preferenciasLoginFacebook", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putString("email", emailFB);
+        editor.putString("idf", id);
         editor.commit();
     }
 
@@ -403,16 +417,17 @@ public class LoginActivity extends AppCompatActivity {
                         jsonObject = response.getJSONObject(i);
                         passDBDesencriptada = Encriptar(pass) ;
                         passDBDEencriptada = jsonObject.getString("password");
+                        String id = jsonObject.getString("idUsuario");
                         Log.i(TAG, "PASS ENCRIPTADA TV " + passDBDesencriptada);
                         Log.i(TAG, "PASS ENCRIPTADA DB " + passDBDEencriptada);
                     if (passDBDesencriptada.equals(passDBDEencriptada)){
-                        validarUsuario("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/loginUsuario.php");
+                        validarUsuario("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/loginUsuario.php", id);
                     }
 
 
 
                     } catch (JSONException e) {
-                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "error getinfouser", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -452,5 +467,35 @@ public class LoginActivity extends AppCompatActivity {
         }
         return base64EncryptedString;
     }
+    private void getIdUser(String URL) {
 
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(URL, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                JSONObject jsonObject = null;
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        Log.i("TAG", "getInfoUser");
+                        jsonObject = response.getJSONObject(i);
+                        idFace = jsonObject.getString("idUsuario");
+                        guardarPreferenciasFacebook(idFace);
+                        Log.i("TAG", "RECUPERO PREFERENCIAS FACEBOOK ID:"+idFace);
+                    } catch (JSONException e) {
+                        Log.i("TAG", "error getinfouserINICIO ");
+                    }
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }
+        );
+        requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonArrayRequest);
+
+
+    }
 }

@@ -83,7 +83,11 @@ public class InicioFragment extends Fragment {
     private String emailguardado;
     private int idStack;
     private String nombreProductoSpinner;
-    private String idProducto;
+    private String idFaceb;
+    private String idUserFacebook;
+    private String idUserLocal;
+    private String idGeneral;
+    private String idProductoPref;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
@@ -102,35 +106,42 @@ public class InicioFragment extends Fragment {
 
 
 
+
         cardStack = root.findViewById(R.id.container);
         btnCancel = root.findViewById(R.id.cancel);
         btnLove = root.findViewById(R.id.love);
         currentPosition = 0;
+try {
+
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         user = mFirebaseAuth.getCurrentUser();
 
-        try {
-
-            emailFireBase = user.getEmail();
-            if (emailFireBase != null) {
-                //LOGIN FACEBOOK
-                LogedInFacebook = true;
-                Log.i("TAG", "setCardStackAdapter: se llama desde fb");
-                getInfoUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdUser.php?email=" + user.getEmail() + "");
-                emailguardado =  user.getEmail();
-
-            }
-        } catch (Exception e) {
-
+        emailFireBase = user.getEmail();
+        if (emailFireBase != null){
+            recuperarPreferenciasFacebook();
+            idUserFacebook = idFaceb;
+            Log.i("TAG", "idUserFacebook "+idUserFacebook);
+            Log.i("TAG", "Se llama desde fb");
+            LogedInFacebook = true;
+            setCardStackAdapter(idUserFacebook);
+            agregarProductoSpinner(idUserFacebook);
+            emailguardado =  user.getEmail();
+            idGeneral = idUserFacebook;
         }
+}catch (Exception e){
 
-        recuperarPreferencias();
+}
+
         if (!LogedInFacebook) {
+            recuperarPreferencias();
             //lOGIN EMAIL Y CONTRASEÑA
-            Log.i("TAG", " se llama desde local");
-            getInfoUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdUser.php?email=" + emailPreferencia + "");
+            Log.i("TAG", "Se llama desde local");
+            Log.i("TAG", "idUserLocal"+ idUserLocal);
+            setCardStackAdapter(idUserLocal);
+            agregarProductoSpinner(idUserLocal);
             emailguardado =  emailPreferencia;
+            idGeneral = idUserLocal;
         }
 
 
@@ -152,8 +163,13 @@ public class InicioFragment extends Fragment {
                 currentPosition = position + 1;
 
                 //Obtener FK_IdUser y Obtener ID producto Spinner
-                getIdUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdUser.php?email=" + emailguardado + "");
+                ObtenerIdProducto("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdProductSpinner.php?FK_idUser=" + idGeneral + "&nombre="+nombreProductoSpinner +"");
 
+                recuperarPreferenciasIdProducto();
+                if (cardItems.get(currentPosition).getId() != 999999999){
+                    ejecutarServicio( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/insertMatch.php", idProductoPref );
+                    getInfoMatch( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/verificarMatch.php?FK_idMiProducto=" +  idProductoPref + "&FK_idProductoLike="+ idStack  +"");
+                }
 
                 //Insertar en matches
             }
@@ -255,7 +271,15 @@ public class InicioFragment extends Fragment {
         SharedPreferences preferences = this.getActivity().getSharedPreferences("preferenciasLogin", Context.MODE_PRIVATE);
 
         emailPreferencia = preferences.getString("email", "micorreo@gmail.com");
+        idUserLocal = preferences.getString("idlocal", "-4");
         Log.i("TAG", "email referencia: " + emailPreferencia);
+    }
+
+    private void recuperarPreferenciasFacebook() {
+        SharedPreferences preferences = this.getActivity().getSharedPreferences("preferenciasLoginFacebook", Context.MODE_PRIVATE);
+
+        idFaceb = preferences.getString("idf", "-2");
+        Log.i("TAG", "email referencia: " + idFaceb);
     }
 
     private void getInfoUser(String URL) {
@@ -269,10 +293,9 @@ public class InicioFragment extends Fragment {
                         Log.i("TAG", "getInfoUser");
                         jsonObject = response.getJSONObject(i);
                         FK_idUser = jsonObject.getString("idUsuario");
-                        setCardStackAdapter();
-                        agregarProductoSpinner();
+
                     } catch (JSONException e) {
-                        Log.i("TAG", "onResponse: " + e.getMessage());
+                        Log.i("TAG", "error getinfouserINICIO ");
                     }
                 }
 
@@ -290,34 +313,25 @@ public class InicioFragment extends Fragment {
 
     }
 
-    private void setCardStackAdapter() {
+    private void setCardStackAdapter(String id) {
 
 
         Log.i("TAG", "SetCardAdapter");
         cardItems = new ArrayList<>();
-        ObtenerProductos("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getProducts.php?FK_idUser=" + FK_idUser + "");
+        ObtenerProductos("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getProducts.php?FK_idUser=" + id + "");
 
 
         cardsAdapter = new CardsAdapter(getActivity(), cardItems);
         cardStack.setAdapter(cardsAdapter);
-    /*
-        cardItems = new ArrayList<>();
 
-        cardItems.add(new CardItem(R.drawable.muestra, "¡No hay mas productos!","Vuelve pronto", "", "https://dam.ngenespanol.com/wp-content/uploads/2020/01/blue-monday.jpg"));
-
-
-        cardItems.add(new CardItem(R.drawable.triste,"¡No hay mas productos!","Vuelve pronto", "", "https://dam.ngenespanol.com/wp-content/uploads/2020/01/blue-monday.jpg"));
-        cardsAdapter = new CardsAdapter(getActivity(), cardItems);
-        cardStack.setAdapter(cardsAdapter);
-*/
  }
 
-    public void agregarProductoSpinner() {
+    public void agregarProductoSpinner(String id) {
 
         Log.i("TAG", "AgregarProductoSpinner");
         lista.add("Seleccione un producto");
 
-        ObtenerMisProductos("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getProductUser.php?FK_idUser=" + FK_idUser + "");
+        ObtenerMisProductos("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getProductUser.php?FK_idUser=" + id + "");
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, lista);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -365,10 +379,8 @@ public class InicioFragment extends Fragment {
 
                         jsonObject = response.getJSONObject(i);
                       jsonObject.getString("idProduct");
-                        if (cardItems.get(currentPosition).getId() != 999999999){
-                            ejecutarServicio( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/insertMatch.php", jsonObject.getString("idProduct") );
-                            getInfoMatch( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/verificarMatch.php?FK_idMiProducto=" +  jsonObject.getString("idProduct") + "&FK_idProductoLike="+ idStack  +"");
-                        }
+                      guardarIdProducto(jsonObject.getString("idProduct"));
+
 
 
                     } catch (JSONException e) {
@@ -402,10 +414,10 @@ public class InicioFragment extends Fragment {
 
                         jsonObject = response.getJSONObject(i);
                         FK_idUser = jsonObject.getString("idUsuario");
-                        ObtenerIdProducto("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdProductSpinner.php?FK_idUser=" + FK_idUser + "&nombre="+nombreProductoSpinner +"");
+
 
                     } catch (JSONException e) {
-                        Log.i("TAG", "onResponse: " + e.getMessage());
+                        Log.i("TAG", "ErrorGetiidUserINICIO");
                     }
                 }
 
@@ -463,10 +475,10 @@ public class InicioFragment extends Fragment {
 
                         Log.i("TAG", " cc=" + Integer.parseInt(jsonObject.getString("cc")));
                         if (jsonObject.getString("cc").equals("2")){
-                            Toast.makeText(getActivity(), "¡¡¡MATCH!!!", Toast.LENGTH_SHORT).show();
+                            Log.i("TAG", "MATCHHHHHHHHHH");
                         }
                     } catch (JSONException e) {
-                        Log.i("TAG", "onResponse: " + e.getMessage());
+                        Log.i("TAG", "Error getinfomatchINICIO");
                     }
                 }
 
@@ -481,6 +493,22 @@ public class InicioFragment extends Fragment {
         requestQueue = Volley.newRequestQueue(getContext());
         requestQueue.add(jsonArrayRequest);
 
+
+    }
+
+    private void guardarIdProducto(String id){
+        SharedPreferences preferences = getActivity().getSharedPreferences("idProductoPreference", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putString("idProducto", id);
+
+        editor.commit();
+    }
+
+    private void recuperarPreferenciasIdProducto() {
+        SharedPreferences preferences = this.getActivity().getSharedPreferences("idProductoPreference", Context.MODE_PRIVATE);
+
+        idProductoPref = preferences.getString("idProducto", "-1");
 
     }
 }
