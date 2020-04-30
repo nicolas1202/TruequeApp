@@ -128,7 +128,7 @@ public class InicioFragment extends Fragment {
         recuperarPreferencias();
         if (!LogedInFacebook) {
             //lOGIN EMAIL Y CONTRASEÑA
-            Log.i("TAG", "setCardStackAdapter: se llama desde local");
+            Log.i("TAG", " se llama desde local");
             getInfoUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdUser.php?email=" + emailPreferencia + "");
             emailguardado =  emailPreferencia;
         }
@@ -226,7 +226,7 @@ public class InicioFragment extends Fragment {
 
                 for (int i = 0; i < response.length(); i++) {
                     try {
-
+                        Log.i("TAG", "ObtenerProductos");
                         jsonObject = response.getJSONObject(i);
 
                         cardItems.add(new CardItem(Integer.parseInt(jsonObject.getString("idProduct")),jsonObject.getString("nombre"),jsonObject.getString("descripcion"), jsonObject.getString("precio"), jsonObject.getString("imagen")));
@@ -255,7 +255,7 @@ public class InicioFragment extends Fragment {
         SharedPreferences preferences = this.getActivity().getSharedPreferences("preferenciasLogin", Context.MODE_PRIVATE);
 
         emailPreferencia = preferences.getString("email", "micorreo@gmail.com");
-
+        Log.i("TAG", "email referencia: " + emailPreferencia);
     }
 
     private void getInfoUser(String URL) {
@@ -266,7 +266,7 @@ public class InicioFragment extends Fragment {
                 JSONObject jsonObject = null;
                 for (int i = 0; i < response.length(); i++) {
                     try {
-
+                        Log.i("TAG", "getInfoUser");
                         jsonObject = response.getJSONObject(i);
                         FK_idUser = jsonObject.getString("idUsuario");
                         setCardStackAdapter();
@@ -293,7 +293,7 @@ public class InicioFragment extends Fragment {
     private void setCardStackAdapter() {
 
 
-        Log.i("TAG", "setCardStackAdapter: Entro");
+        Log.i("TAG", "SetCardAdapter");
         cardItems = new ArrayList<>();
         ObtenerProductos("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getProducts.php?FK_idUser=" + FK_idUser + "");
 
@@ -314,7 +314,7 @@ public class InicioFragment extends Fragment {
 
     public void agregarProductoSpinner() {
 
-
+        Log.i("TAG", "AgregarProductoSpinner");
         lista.add("Seleccione un producto");
 
         ObtenerMisProductos("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getProductUser.php?FK_idUser=" + FK_idUser + "");
@@ -332,7 +332,7 @@ public class InicioFragment extends Fragment {
                 JSONObject jsonObject = null;
                 for (int i = 0; i < response.length(); i++) {
                     try {
-
+                        Log.i("TAG", "ObtenerMisProductos");
                         jsonObject = response.getJSONObject(i);
                         lista.add(jsonObject.getString("nombre"));
 
@@ -364,10 +364,10 @@ public class InicioFragment extends Fragment {
                     try {
 
                         jsonObject = response.getJSONObject(i);
-                        jsonObject.getString("idProduct");
+                      jsonObject.getString("idProduct");
                         if (cardItems.get(currentPosition).getId() != 999999999){
-                            ejecutarServicio( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/insertMatch.php",jsonObject.getString("idProduct") );
-                            getInfoMatch( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/verificarMatch.php?FK_idMiProducto=" + jsonObject.getString("idProduct") + "&FK_idProductoLike="+ idStack  +"");
+                            ejecutarServicio( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/insertMatch.php", jsonObject.getString("idProduct") );
+                            getInfoMatch( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/verificarMatch.php?FK_idMiProducto=" +  jsonObject.getString("idProduct") + "&FK_idProductoLike="+ idStack  +"");
                         }
 
 
@@ -460,9 +460,9 @@ public class InicioFragment extends Fragment {
                     try {
 
                         jsonObject = response.getJSONObject(i);
-                        count = Integer.parseInt(jsonObject.getString("cc"));
-                        Log.i("count", "COUNT DB" + Integer.parseInt(jsonObject.getString("cc")));
-                        if (count == 2){
+
+                        Log.i("TAG", " cc=" + Integer.parseInt(jsonObject.getString("cc")));
+                        if (jsonObject.getString("cc").equals("2")){
                             Toast.makeText(getActivity(), "¡¡¡MATCH!!!", Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
