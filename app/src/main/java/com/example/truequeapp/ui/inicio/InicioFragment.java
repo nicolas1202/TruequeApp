@@ -152,11 +152,8 @@ try {
             @Override
             public void onViewSwipedToLeft(int position) {
 
-                nombreProductoSpinner = spinner.getSelectedItem().toString();
                 //Obtener idProducto Stack
                 idStack =  cardItems.get(currentPosition).getId();
-
-
 
                 recuperarPreferenciasIdProducto();
                 if (cardItems.get(currentPosition).getId() != 999999999){
