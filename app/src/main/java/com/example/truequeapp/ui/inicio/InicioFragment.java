@@ -1,21 +1,18 @@
 package com.example.truequeapp.ui.inicio;
 
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.style.TtsSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,8 +20,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.android.volley.AuthFailureError;
@@ -35,16 +30,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.truequeapp.AdaptadorProductos;
-import com.example.truequeapp.MainActivity;
-import com.example.truequeapp.Producto;
 import com.example.truequeapp.R;
 import com.example.truequeapp.ui.CardItem;
 import com.example.truequeapp.ui.CardsAdapter;
-import com.example.truequeapp.ui.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 
 import org.json.JSONArray;
@@ -468,7 +458,7 @@ try {
 
                         Log.i("TAG", " cc=" + Integer.parseInt(jsonObject.getString("cc")));
                         if (jsonObject.getString("cc").equals("2")){
-                            Log.i("TAG", "MATCHHHHHHHHHH");
+                            MostrarVentanaMatch();
                         }
                     } catch (JSONException e) {
                         Log.i("TAG", "Error getinfomatchINICIO");
@@ -502,6 +492,62 @@ try {
         SharedPreferences preferences = this.getActivity().getSharedPreferences("idProductoPreference", Context.MODE_PRIVATE);
 
         idProductoPref = preferences.getString("idProducto", "-1");
+
+    }
+
+    public void MostrarVentanaMatch(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.match, null);
+
+        // Specify alert dialog is not cancelable/not ignorable
+        builder.setCancelable(false);
+
+        // Set the custom layout as alert dialog view
+        builder.setView(dialogView);
+
+        // Get the custom alert dialog view widgets reference
+        Button btn_positive = (Button) dialogView.findViewById(R.id.btnBuscar);
+        Button btn_negative = (Button) dialogView.findViewById(R.id.btnWapp);
+        final EditText etNombre = dialogView.findViewById(R.id.etNombreProd);
+        final EditText etDescrip = dialogView.findViewById(R.id.etDescrProd);
+        final EditText etPrecio = dialogView.findViewById(R.id.etPrecioProd);
+
+        // Create the alert dialog
+        final AlertDialog dialog = builder.create();
+
+        // Set positive/yes button click listener
+        btn_positive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Dismiss the alert dialog
+                dialog.cancel();
+                //name = etNombre.getText().toString();
+                //desc = etDescrip.getText().toString();
+               // precio = etPrecio.getText().toString();
+              //  Toast.makeText(getActivity(),
+                //        "Submitted name : " + name, Toast.LENGTH_SHORT).show();
+                // Say hello to the submitter
+
+            }
+        });
+
+        // Set negative/no button click listener
+        btn_negative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Dismiss/cancel the alert dialog
+                //dialog.cancel();
+                dialog.dismiss();
+
+            }
+        });
+
+        // Display the custom alert dialog on interface
+        dialog.show();
+
+        //Insertar producto logeado con facebook
 
     }
 }

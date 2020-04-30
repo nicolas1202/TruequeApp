@@ -135,8 +135,8 @@ public class ProductosFragment extends Fragment {
                 builder.setView(dialogView);
 
                 // Get the custom alert dialog view widgets reference
-                Button btn_positive = (Button) dialogView.findViewById(R.id.btnAceptarProducto);
-                Button btn_negative = (Button) dialogView.findViewById(R.id.btnCancelar);
+                Button btn_positive = (Button) dialogView.findViewById(R.id.btnBuscar);
+                Button btn_negative = (Button) dialogView.findViewById(R.id.btnWapp);
                 final EditText etNombre = dialogView.findViewById(R.id.etNombreProd);
                 final EditText etDescrip = dialogView.findViewById(R.id.etDescrProd);
                 final EditText etPrecio = dialogView.findViewById(R.id.etPrecioProd);

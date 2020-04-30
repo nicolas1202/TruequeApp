@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/btnAceptarProducto"
+        android:id="@+id/btnBuscar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#8BC34A"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <Button
-        android:id="@+id/btnCancelar"
+        android:id="@+id/btnWapp"
         android:layout_width="match_parent"
         android:layout_height="25sp"
         android:layout_marginTop="48dp"
@@ -88,7 +88,7 @@
         android:layout_marginEnd="107dp"
         android:layout_marginRight="107dp"
         android:layout_marginBottom="76dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnAceptarProducto"
+        app:layout_constraintBottom_toTopOf="@+id/btnBuscar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
