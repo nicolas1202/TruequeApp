@@ -2,7 +2,9 @@ package com.example.truequeapp.ui.inicio;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -497,19 +499,16 @@ try {
 
     public void MostrarVentanaMatch(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.match, null);
-
         // Specify alert dialog is not cancelable/not ignorable
         builder.setCancelable(false);
-
         // Set the custom layout as alert dialog view
         builder.setView(dialogView);
 
         // Get the custom alert dialog view widgets reference
-        Button btn_positive = (Button) dialogView.findViewById(R.id.btnBuscar);
-        Button btn_negative = (Button) dialogView.findViewById(R.id.btnWapp);
+        Button btnWhatsapp = (Button) dialogView.findViewById(R.id.btnWapp);
+        Button btnSeguirBuscando = (Button) dialogView.findViewById(R.id.btnBuscar);
         final EditText etNombre = dialogView.findViewById(R.id.etNombreProd);
         final EditText etDescrip = dialogView.findViewById(R.id.etDescrProd);
         final EditText etPrecio = dialogView.findViewById(R.id.etPrecioProd);
@@ -518,23 +517,25 @@ try {
         final AlertDialog dialog = builder.create();
 
         // Set positive/yes button click listener
-        btn_positive.setOnClickListener(new View.OnClickListener() {
+        btnWhatsapp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Dismiss the alert dialog
-                dialog.cancel();
+                //dialog.cancel();
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                String uri = "whatsapp://send?phone=" + "5492616176700" + "&text=" + "¡Hola! Hicimos match con nuestros productos en Trueque App.";
+                intent.setData(Uri.parse(uri));
+                startActivity(intent);
+
                 //name = etNombre.getText().toString();
                 //desc = etDescrip.getText().toString();
                // precio = etPrecio.getText().toString();
-              //  Toast.makeText(getActivity(),
-                //        "Submitted name : " + name, Toast.LENGTH_SHORT).show();
-                // Say hello to the submitter
+
 
             }
         });
 
         // Set negative/no button click listener
-        btn_negative.setOnClickListener(new View.OnClickListener() {
+        btnSeguirBuscando.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Dismiss/cancel the alert dialog
