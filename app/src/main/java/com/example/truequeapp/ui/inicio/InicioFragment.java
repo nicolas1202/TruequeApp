@@ -151,19 +151,12 @@ try {
         cardStack.setListener(new SwipeStack.SwipeStackListener() {
             @Override
             public void onViewSwipedToLeft(int position) {
-                //like
-               // Toast.makeText(getActivity(), "You liked " + cardItems.get(currentPosition).getId(),
-                    //    Toast.LENGTH_SHORT).show();
 
                 nombreProductoSpinner = spinner.getSelectedItem().toString();
                 //Obtener idProducto Stack
                 idStack =  cardItems.get(currentPosition).getId();
 
 
-
-
-                //Obtener FK_IdUser y Obtener ID producto Spinner
-                ObtenerIdProducto("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdProductSpinner.php?FK_idUser=" + idGeneral + "&nombre="+nombreProductoSpinner +"");
 
                 recuperarPreferenciasIdProducto();
                 if (cardItems.get(currentPosition).getId() != 999999999){
@@ -216,6 +209,9 @@ try {
                 btnLove.setVisibility(View.INVISIBLE);
                 Toast.makeText(getActivity(), "Seleccione un producto para permutar", Toast.LENGTH_LONG).show();
             }else{
+                //  Obtener ID producto Spinner
+                nombreProductoSpinner = spinner.getSelectedItem().toString();
+                ObtenerIdProducto("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdProductSpinner.php?FK_idUser=" + idGeneral + "&nombre="+nombreProductoSpinner +"");
                 cardStack.setVisibility(View.VISIBLE);
                 btnCancel.setVisibility(View.VISIBLE);
                 btnLove.setVisibility(View.VISIBLE);
