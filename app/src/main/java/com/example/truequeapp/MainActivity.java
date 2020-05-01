@@ -27,6 +27,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.jackandphantom.blurimage.BlurImage;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.squareup.picasso.Picasso;
 
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity  {
     TextView tvemail;
     TextView tvenombre;
     ImageView imagenPerfil;
+
     int bandera2=0;
     final static String TAG = "BUTTON FACEBOOOOOOK";
 
@@ -93,7 +95,6 @@ public class MainActivity extends AppCompatActivity  {
         tvemail = (TextView) headerView.findViewById(R.id.et_EmailUsuario);
         tvenombre = (TextView) headerView.findViewById(R.id.et_NombreUsuario);
         imagenPerfil = headerView.findViewById(R.id.idFotoPerfil);
-
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -170,7 +171,7 @@ public class MainActivity extends AppCompatActivity  {
             tvemail.setText(setEmailFB);
             tvenombre.setText(setNombreFB);
             Picasso.get().load(setImagenFB).into(imagenPerfil);
-
+           // BlurImage.with(getApplicationContext()).load(informacionUsuario.getString("ImagenPerfil")).intensity(20).Async(true).into(imagenPerfil);
         }else{
             SharedPreferences preferences = getSharedPreferences("preferenciasLogin", Context.MODE_PRIVATE);
             emailapp = (preferences.getString("email", "micorreo@gmail.com"));

@@ -16,11 +16,10 @@ public class CardItem {
         this.imagen = imagen;
     }
 
-    public CardItem(String name, String descripcion, String precio, String imagen) {
-
+    public CardItem(int Id,String name, String descripcion,  String imagen) {
+        this.Id = Id;
         this.name = name;
         this.descripcion = descripcion;
-        this.precio = precio;
         this.imagen = imagen;
     }
 

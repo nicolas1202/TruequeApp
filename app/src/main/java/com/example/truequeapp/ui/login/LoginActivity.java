@@ -111,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         FacebookSdk.sdkInitialize(getApplicationContext());
         loginButton = findViewById(R.id.login_button);
-        loginButton.setReadPermissions("email","public_profile");
+        loginButton.setReadPermissions("email","public_profile", "phone");
         mCallbackManager = CallbackManager.Factory.create();
 
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<com.facebook.login.LoginResult>() {

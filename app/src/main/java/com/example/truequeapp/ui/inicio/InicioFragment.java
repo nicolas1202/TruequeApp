@@ -112,6 +112,7 @@ try {
         emailFireBase = user.getEmail();
         if (emailFireBase != null){
             recuperarPreferenciasFacebook();
+            Log.i("TAG", "TELEFONO "+user.getPhoneNumber());
             idUserFacebook = idFaceb;
             Log.i("TAG", "idUserFacebook "+idUserFacebook);
             Log.i("TAG", "Se llama desde fb");
@@ -143,24 +144,26 @@ try {
         cardStack.setListener(new SwipeStack.SwipeStackListener() {
             @Override
             public void onViewSwipedToLeft(int position) {
+                //dislike
+                currentPosition = position + 1;
+                Toast.makeText(getActivity(), "NO LIKE", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onViewSwipedToRight(int position) {
+
 
                 //Obtener idProducto Stack
                 idStack =  cardItems.get(currentPosition).getId();
 
                 recuperarPreferenciasIdProducto();
                 if (cardItems.get(currentPosition).getId() != 999999999){
-                   // ejecutarServicio( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/insertMatch.php", idProductoPref );
+                    // ejecutarServicio( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/insertMatch.php", idProductoPref );
                     getInfoMatch( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/verificarMatchs.php?FK_idMiProducto=" +  idProductoPref + "&FK_idProductoLike="+ idStack  +"");
                 }
                 currentPosition = position + 1;
 
-            }
-
-            @Override
-            public void onViewSwipedToRight(int position) {
-                //dislike
-                currentPosition = position + 1;
-                Toast.makeText(getActivity(), "NO LIKE", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -172,15 +175,16 @@ try {
       btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cardStack.swipeTopViewToRight();
+
+                cardStack.swipeTopViewToLeft();
             }
         });
 
         btnLove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                cardStack.swipeTopViewToRight();
 
-                cardStack.swipeTopViewToLeft();
             }
         });
 

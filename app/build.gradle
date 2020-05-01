@@ -13,6 +13,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        renderscriptSupportModeEnabled true
     }
 
     buildTypes {
@@ -48,4 +49,5 @@ dependencies {
     implementation 'link.fls:swipestack:0.3.0'
     implementation "androidx.cardview:cardview:1.0.0"
     implementation 'androidx.appcompat:appcompat:1.1.0'
+    compile 'com.jackandphantom.android:blurimage:1.2.0'
 }
