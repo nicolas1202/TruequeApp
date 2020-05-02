@@ -3,65 +3,66 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="@color/colorPrimaryDark"
+android:background="@color/colorPrimary"
+    android:padding="20sp"
     >
 
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:gravity="center"
-      android:orientation="vertical"
-      android:layout_marginTop="32sp"
-     >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_marginTop="32sp"
+        >
 
-      <TextView
-          android:id="@+id/textView4"
-          android:layout_width="192dp"
-          android:layout_height="wrap_content"
-          android:fontFamily="@font/bilbo"
-          android:textColor="@android:color/white"
-          android:layout_marginTop="15sp"
-          android:text="¡Match!"
-          android:textSize="77sp" />
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="192dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bilbo"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="15sp"
+            android:text="¡Match!"
+            android:textSize="77sp" />
 
-      <TextView
-          android:id="@+id/textView6"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textColor="@android:color/white"
-          android:textSize="17sp"
-          android:text="¡Tienen productos para intercambiar!" />
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="17sp"
+            android:text="¡Tienen productos para intercambiar!" />
 
-     <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="240sp"
-         android:orientation="horizontal"
-         android:gravity="center"
-         android:layout_marginTop="15sp"
-         >
-         <ImageView
-             android:id="@+id/ivMiproducto"
-             android:layout_width="164dp"
-             android:layout_height="164dp"
-             android:layout_weight="1"
-             android:padding="4dp"
-             android:background="@drawable/img_border"
-             android:layout_marginEnd="16dp"
-             android:layout_marginTop="35sp"
-             app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
-             android:layout_marginRight="16dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="290sp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="15sp"
+            >
+            <ImageView
+                android:id="@+id/ivMiproducto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="4dp"
+                android:background="@drawable/img_border"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="35sp"
+                app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
+                android:layout_marginRight="16dp" />
 
-         <ImageView
-             android:id="@+id/ivProductoLike"
-             android:layout_width="164dp"
-             android:layout_height="164dp"
-             android:layout_marginTop="35sp"
-             android:layout_weight="1"
-             android:background="@drawable/img_border"
-             android:padding="4dp"
-             app:srcCompat="@drawable/com_facebook_profile_picture_blank_square" />
-     </LinearLayout>
-  </LinearLayout>
+            <ImageView
+                android:id="@+id/ivProductoLike"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="35sp"
+                android:layout_weight="1"
+                android:background="@drawable/img_border"
+                android:padding="4dp"
+                app:srcCompat="@drawable/com_facebook_profile_picture_blank_square" />
+        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -164,7 +165,7 @@ try {
 
                 recuperarPreferenciasIdProducto();
                 if (cardItems.get(currentPosition).getId() != 999999999){
-                    // ejecutarServicio( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/insertMatch.php", idProductoPref );
+                   // ejecutarServicio( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/insertMatch.php", idProductoPref );
                     getInfoMatch( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/verificarMatchs.php?FK_idMiProducto=" +  idProductoPref + "&FK_idProductoLike="+ idStack  +"");
                 }
                 currentPosition = position + 1;
@@ -508,10 +509,11 @@ try {
 
     @SuppressLint("ResourceAsColor")
     public void MostrarVentanaMatch(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Transparent);
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.match, null);
 
+        dialogView.setBackgroundColor(Color.TRANSPARENT);
         // Specify alert dialog is not cancelable/not ignorable
         builder.setCancelable(false);
         // Set the custom layout as alert dialog view
