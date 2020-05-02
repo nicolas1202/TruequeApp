@@ -1,4 +1,4 @@
-package com.example.truequeapp.ui.misProductos;
+package com.example.truequeapp.misProductos;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -30,8 +30,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.truequeapp.AdaptadorProductos;
-import com.example.truequeapp.Producto;
 import com.example.truequeapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

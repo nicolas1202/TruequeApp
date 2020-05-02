@@ -1,4 +1,4 @@
-package com.example.truequeapp.ui;
+package com.example.truequeapp.inicio;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.truequeapp.R;
+import com.example.truequeapp.inicio.CardItem;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

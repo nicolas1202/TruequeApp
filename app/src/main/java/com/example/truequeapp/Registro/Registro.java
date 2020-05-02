@@ -1,4 +1,4 @@
-package com.example.truequeapp;
+package com.example.truequeapp.Registro;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,25 +10,19 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.truequeapp.ui.login.LoginActivity;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.truequeapp.R;
+import com.example.truequeapp.login.LoginActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.digest.DigestUtils;
 
-import java.net.URL;
 import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.HashMap;

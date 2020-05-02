@@ -1,4 +1,4 @@
-package com.example.truequeapp.ui.login;
+package com.example.truequeapp.login;
 
 import androidx.annotation.Nullable;
 

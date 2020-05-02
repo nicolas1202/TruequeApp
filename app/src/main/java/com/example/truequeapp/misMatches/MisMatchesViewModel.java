@@ -1,16 +1,16 @@
-package com.example.truequeapp.ui.misProductos;
+package com.example.truequeapp.misMatches;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class ProductosViewModel extends ViewModel {
+public class MisMatchesViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public ProductosViewModel() {
+    public MisMatchesViewModel() {
         mText = new MutableLiveData<>();
-        //mText.setValue("This is mis productos fragment");
+        //mText.setValue("Fragment Matches");
     }
 
     public LiveData<String> getText() {

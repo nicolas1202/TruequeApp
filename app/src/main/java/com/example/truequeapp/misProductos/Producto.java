@@ -1,4 +1,4 @@
-package com.example.truequeapp;
+package com.example.truequeapp.misProductos;
 
 public class Producto {
 

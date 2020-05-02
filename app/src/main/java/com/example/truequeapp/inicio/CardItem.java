@@ -1,4 +1,4 @@
-package com.example.truequeapp.ui;
+package com.example.truequeapp.inicio;
 
 public class CardItem {
 

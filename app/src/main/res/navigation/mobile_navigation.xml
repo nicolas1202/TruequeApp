@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/idInicio"
-        android:name="com.example.truequeapp.ui.inicio.InicioFragment"
+        android:name="com.example.truequeapp.inicio.InicioFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/mi_inicio" >
 
@@ -23,13 +23,13 @@
 
     <fragment
         android:id="@+id/idMisProductos"
-        android:name="com.example.truequeapp.ui.misProductos.ProductosFragment"
+        android:name="com.example.truequeapp.misProductos.ProductosFragment"
         android:label="@string/menu_gallery"
         tools:layout="@layout/mis_productos" />
 
     <fragment
         android:id="@+id/idMatches"
-        android:name="com.example.truequeapp.ui.misMatches.MisMatchesFragment"
+        android:name="com.example.truequeapp.misMatches.MisMatchesFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/mis_matches" />
 </navigation>

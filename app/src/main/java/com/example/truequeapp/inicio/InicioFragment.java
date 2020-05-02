@@ -1,13 +1,12 @@
-package com.example.truequeapp.ui.inicio;
+package com.example.truequeapp.inicio;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -39,10 +37,9 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.truequeapp.R;
-import com.example.truequeapp.ui.CardItem;
-import com.example.truequeapp.ui.CardsAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 
 import org.json.JSONArray;
@@ -86,7 +83,8 @@ public class InicioFragment extends Fragment {
     private String idUserLocal;
     private String idGeneral;
     private String idProductoPref;
-
+    private String imagenProductoPref;
+    private String imagenProductoStack;
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
         inicioViewModel =
@@ -152,7 +150,7 @@ try {
             public void onViewSwipedToLeft(int position) {
                 //dislike
                 currentPosition = position + 1;
-                Toast.makeText(getActivity(), "NO LIKE", Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(getActivity(), "NO LIKE", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -162,7 +160,7 @@ try {
 
                 //Obtener idProducto Stack
                 idStack =  cardItems.get(currentPosition).getId();
-
+                imagenProductoStack =  cardItems.get(currentPosition).getImagen();
                 recuperarPreferenciasIdProducto();
                 if (cardItems.get(currentPosition).getId() != 999999999){
                    // ejecutarServicio( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/insertMatch.php", idProductoPref );
@@ -206,11 +204,11 @@ try {
                 cardStack.setVisibility(View.INVISIBLE);
                 btnCancel.setVisibility(View.INVISIBLE);
                 btnLove.setVisibility(View.INVISIBLE);
-                Toast.makeText(getActivity(), "Seleccione un producto para permutar", Toast.LENGTH_LONG).show();
+              //  Toast.makeText(getActivity(), "Seleccione un producto para permutar", Toast.LENGTH_LONG).show();
             }else{
                 //  Obtener ID producto Spinner
                 nombreProductoSpinner = spinner.getSelectedItem().toString();
-                ObtenerIdProducto("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdProductSpinner.php?FK_idUser=" + idGeneral + "&nombre="+nombreProductoSpinner +"");
+                ObtenerDatosProducto("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdProductSpinner.php?FK_idUser=" + idGeneral + "&nombre="+nombreProductoSpinner +"");
                 cardStack.setVisibility(View.VISIBLE);
                 btnCancel.setVisibility(View.VISIBLE);
                 btnLove.setVisibility(View.VISIBLE);
@@ -363,7 +361,7 @@ try {
         requestQueue.add(jsonArrayRequest);
     }
 
-    private void ObtenerIdProducto(String URL) {
+    private void ObtenerDatosProducto(String URL) {
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(URL, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -373,8 +371,7 @@ try {
                     try {
 
                         jsonObject = response.getJSONObject(i);
-                      jsonObject.getString("idProduct");
-                      guardarIdProducto(jsonObject.getString("idProduct"));
+                      guardarDatosProducto(jsonObject.getString("idProduct"),jsonObject.getString("imagen"));
 
 
 
@@ -491,12 +488,12 @@ try {
 
     }
 
-    private void guardarIdProducto(String id){
+    private void guardarDatosProducto(String id, String imagen){
         SharedPreferences preferences = getActivity().getSharedPreferences("idProductoPreference", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
         editor.putString("idProducto", id);
-
+        editor.putString("imagenProducto", imagen);
         editor.commit();
     }
 
@@ -504,16 +501,26 @@ try {
         SharedPreferences preferences = this.getActivity().getSharedPreferences("idProductoPreference", Context.MODE_PRIVATE);
 
         idProductoPref = preferences.getString("idProducto", "-1");
-
+        imagenProductoPref = preferences.getString("imagenProducto", "-1");
     }
 
     @SuppressLint("ResourceAsColor")
     public void MostrarVentanaMatch(){
+
+        String miProductoImagen;
+        String productoLikeImagen;
+
+        miProductoImagen = imagenProductoPref;
+        productoLikeImagen = imagenProductoStack;
+        Log.i("TAG", "String imagen MI producto: "+ miProductoImagen);
+        Log.i("TAG", "String imagen  producto stack: "+ productoLikeImagen);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Transparent);
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.match, null);
-
         dialogView.setBackgroundColor(Color.TRANSPARENT);
+
+
         // Specify alert dialog is not cancelable/not ignorable
         builder.setCancelable(false);
         // Set the custom layout as alert dialog view
@@ -524,8 +531,11 @@ try {
         ImageView miProducto = dialogView.findViewById(R.id.ivMiproducto);
         ImageView ProductoLike = dialogView.findViewById(R.id.ivProductoLike);
 
-        Glide.with(getContext()).load(R.drawable.back).apply(new RequestOptions().circleCrop()).into(miProducto);
-        Glide.with(getContext()).load(R.drawable.back2).apply(new RequestOptions().circleCrop()).into(ProductoLike);
+        //Picasso.get().load(miProductoImagen).into(miProducto);
+        //Picasso.get().load(productoLikeImagen).into(ProductoLike);
+
+        Glide.with(getContext()).load(miProductoImagen).apply(new RequestOptions().circleCrop()).into(miProducto);
+        Glide.with(getContext()).load(productoLikeImagen).apply(new RequestOptions().circleCrop()).into(ProductoLike);
 
         // Create the alert dialog
         final AlertDialog dialog = builder.create();
@@ -536,12 +546,6 @@ try {
             public void onClick(View v) {
                 dialog.cancel();
 
-
-                //name = etNombre.getText().toString();
-                //desc = etDescrip.getText().toString();
-               // precio = etPrecio.getText().toString();
-
-
             }
         });
 
@@ -549,17 +553,12 @@ try {
         btnSeguirBuscando.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Dismiss/cancel the alert dialog
-                //dialog.cancel();
+
                 dialog.dismiss();
 
             }
         });
-
-        // Display the custom alert dialog on interface
         dialog.show();
-
-        //Insertar producto logeado con facebook
+    }
 
     }
-}

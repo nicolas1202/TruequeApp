@@ -16,7 +16,7 @@
         android:usesCleartextTraffic="true">
 
         <!-- ............................................................ -->
-        <activity android:name=".SplashActivity">
+        <activity android:name=".Splash.SplashActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,19 +26,19 @@
         </activity>
         <!-- ............................................................ -->
         <activity
-            android:name=".Registro"
+            android:name=".Registro.Registro"
             android:label="@string/title_activity_registro"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <!-- ............................................................ -->
         <activity
-            android:name=".ui.login.LoginActivity"
+            android:name=".login.LoginActivity"
             android:label="@string/title_activity_login">
 
         </activity>
         <!-- ............................................................ -->
         <activity
-            android:name=".MainActivity"
+            android:name=".Main.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
 

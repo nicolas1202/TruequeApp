@@ -1,4 +1,4 @@
-package com.example.truequeapp.ui.login;
+package com.example.truequeapp.login;
 
 /**
  * Class exposing authenticated user details to the UI.

@@ -1,4 +1,4 @@
-package com.example.truequeapp;
+package com.example.truequeapp.Splash;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,7 +8,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.example.truequeapp.ui.login.LoginActivity;
+import com.example.truequeapp.Main.MainActivity;
+import com.example.truequeapp.R;
+import com.example.truequeapp.login.LoginActivity;
 
 public class SplashActivity extends AppCompatActivity {
 
