@@ -27,7 +27,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.jackandphantom.blurimage.BlurImage;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.squareup.picasso.Picasso;
 
@@ -63,6 +62,11 @@ public class MainActivity extends AppCompatActivity  {
     final static String TAG = "BUTTON FACEBOOOOOOK";
 
     @Override
+    public void onBackPressed() {
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -77,17 +81,22 @@ public class MainActivity extends AppCompatActivity  {
 
             @Override
             public void onClick(View view) {
-            Toast.makeText(getApplicationContext(),"FB", Toast.LENGTH_SHORT).show();
             FirebaseAuth.getInstance().signOut();
             LoginManager.getInstance().logOut();
             bandera2 =0;
             SharedPreferences preferences = getSharedPreferences("preferenciasLogin", Context.MODE_PRIVATE);
-            preferences.edit().clear().commit();
+            preferences.edit().clear().apply();
+            SharedPreferences preferencesFB = getSharedPreferences("preferenciasLoginFacebook", Context.MODE_PRIVATE);
+            preferencesFB.edit().clear().apply();
+            SharedPreferences preferencesProd = getSharedPreferences("idProductoPreference", Context.MODE_PRIVATE);
+            preferencesProd.edit().clear().apply();
+
             Intent i = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(i);
             finish();
             }
         });
+
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);

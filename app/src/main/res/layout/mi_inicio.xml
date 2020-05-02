@@ -75,8 +75,8 @@
 
         <ImageView
             android:id="@+id/love"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50sp"
+            android:layout_height="50sp"
             android:layout_centerInParent="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/empty"
@@ -85,8 +85,8 @@
 
         <ImageView
             android:id="@+id/cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50sp"
+            android:layout_height="50sp"
             android:layout_centerInParent="true"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@id/empty"

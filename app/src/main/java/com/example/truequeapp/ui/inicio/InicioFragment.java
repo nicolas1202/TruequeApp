@@ -1,9 +1,11 @@
 package com.example.truequeapp.ui.inicio;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -32,6 +35,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.truequeapp.R;
 import com.example.truequeapp.ui.CardItem;
 import com.example.truequeapp.ui.CardsAdapter;
@@ -501,21 +506,24 @@ try {
 
     }
 
+    @SuppressLint("ResourceAsColor")
     public void MostrarVentanaMatch(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK);
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.match, null);
+
         // Specify alert dialog is not cancelable/not ignorable
         builder.setCancelable(false);
         // Set the custom layout as alert dialog view
         builder.setView(dialogView);
 
-        // Get the custom alert dialog view widgets reference
         Button btnWhatsapp = (Button) dialogView.findViewById(R.id.btnWapp);
         Button btnSeguirBuscando = (Button) dialogView.findViewById(R.id.btnBuscar);
-        final EditText etNombre = dialogView.findViewById(R.id.etNombreProd);
-        final EditText etDescrip = dialogView.findViewById(R.id.etDescrProd);
-        final EditText etPrecio = dialogView.findViewById(R.id.etPrecioProd);
+        ImageView miProducto = dialogView.findViewById(R.id.ivMiproducto);
+        ImageView ProductoLike = dialogView.findViewById(R.id.ivProductoLike);
+
+        Glide.with(getContext()).load(R.drawable.back).apply(new RequestOptions().circleCrop()).into(miProducto);
+        Glide.with(getContext()).load(R.drawable.back2).apply(new RequestOptions().circleCrop()).into(ProductoLike);
 
         // Create the alert dialog
         final AlertDialog dialog = builder.create();
@@ -524,11 +532,8 @@ try {
         btnWhatsapp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //dialog.cancel();
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                String uri = "whatsapp://send?phone=" + "5492616176700" + "&text=" + "¡Hola! Hicimos match con nuestros productos en Trueque App.";
-                intent.setData(Uri.parse(uri));
-                startActivity(intent);
+                dialog.cancel();
+
 
                 //name = etNombre.getText().toString();
                 //desc = etDescrip.getText().toString();

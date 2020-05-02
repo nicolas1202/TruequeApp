@@ -207,7 +207,7 @@ public class ProductosFragment extends Fragment {
                         //SI
                         int id;
                         id = listaProductos.get(rvListaProductos.getChildAdapterPosition(v)).getId();
-                        ejecutarServicio("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/deleteProduct.php?idProduct=" + id + "", true);
+                        EliminarProducto("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/deleteProduct.php?idProduct=" + id + "", true);
                     }
                 });
                 alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -305,6 +305,38 @@ public class ProductosFragment extends Fragment {
             @Override
             public void onResponse(String response) {
 
+
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("nombre", name);
+                parametros.put("descripcion", desc);
+                parametros.put("imagen", "https://static.mercadoshops.com/guitarra-criolla-admira-paloma-palermo_iZ1075530178XvZgrandeXpZ3XfZ246744778-799583688-3XsZ246744778xIM.jpg");
+                parametros.put("precio", precio);
+                parametros.put("FK_idUser", FK_idUser);
+                Log.i(TAG, "getParams: " + FK_idUser);
+                return parametros;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
+        requestQueue.add(stringRequest);
+    }
+    private void EliminarProducto(String URL, final boolean bandera) {
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
                 if (bandera) {
                     Toast.makeText(getActivity(), "Producto eliminado correctamente", Toast.LENGTH_SHORT).show();
                     if (LogedInFacebook) {
@@ -326,25 +358,14 @@ public class ProductosFragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(), "Error en try catch ejecutar servicio", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("nombre", name);
-                parametros.put("descripcion", desc);
-                parametros.put("imagen", "https://static.mercadoshops.com/guitarra-criolla-admira-paloma-palermo_iZ1075530178XvZgrandeXpZ3XfZ246744778-799583688-3XsZ246744778xIM.jpg");
-                parametros.put("precio", precio);
-                parametros.put("FK_idUser", FK_idUser);
-                Log.i(TAG, "getParams: " + FK_idUser);
-                return parametros;
-            }
+
         };
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
         requestQueue.add(stringRequest);
     }
-
     private void recuperarPreferencias() {
         SharedPreferences preferences = this.getActivity().getSharedPreferences("preferenciasLogin", Context.MODE_PRIVATE);
 
