@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +33,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.truequeapp.R;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -76,7 +79,6 @@ public class ProductosFragment extends Fragment {
         final View root = inflater.inflate(R.layout.mis_productos, container, false);
         final Button btnAgregarProducto = root.findViewById(R.id.btnAgregarProducto);
 
-
         rvListaProductos = root.findViewById(R.id.rvProductosI);
         rvListaProductos.setLayoutManager(new GridLayoutManager(getContext(), 1));
 
@@ -117,7 +119,6 @@ public class ProductosFragment extends Fragment {
 
         }
 
-
         btnAgregarProducto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,9 +136,13 @@ public class ProductosFragment extends Fragment {
                 // Get the custom alert dialog view widgets reference
                 Button btn_positive = (Button) dialogView.findViewById(R.id.btnBuscar);
                 Button btn_negative = (Button) dialogView.findViewById(R.id.btnWapp);
-                final EditText etNombre = dialogView.findViewById(R.id.etNombreProd);
-                final EditText etDescrip = dialogView.findViewById(R.id.etDescrProd);
-                final EditText etPrecio = dialogView.findViewById(R.id.etPrecioProd);
+                //final EditText etNombre = dialogView.findViewById(R.id.etNombreProd);
+                //final EditText etDescrip = dialogView.findViewById(R.id.etDescrProd);
+                //final EditText etPrecio = dialogView.findViewById(R.id.etPrecioProd);
+
+                final TextInputLayout et_Nombre = dialogView.findViewById(R.id.etNombreProd);;
+                final TextInputLayout et_Descrip = dialogView.findViewById(R.id.etDescrProd);;
+                final TextInputLayout et_Precio = dialogView.findViewById(R.id.etPrecioProd);;
 
                 // Create the alert dialog
                 final AlertDialog dialog = builder.create();
@@ -146,20 +151,25 @@ public class ProductosFragment extends Fragment {
                 btn_positive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Dismiss the alert dialog
-                        dialog.cancel();
-                         name = etNombre.getText().toString();
-                         desc = etDescrip.getText().toString();
-                         precio = etPrecio.getText().toString();
+                        //FALTA VALIDAR FOTO
+                        if(!validateTitle(et_Nombre) | !validateDescription(et_Descrip) | !validatePrice(et_Precio) ) { //Debe ir una sola barra para que muestre ambos mensajes
+                            return;
+                        }
+
+                        //name = etNombre.getText().toString();
+                        //desc = etDescrip.getText().toString();
+                        //precio = etPrecio.getText().toString();
+                        name = et_Nombre.getEditText().getText().toString().trim();
+                        desc = et_Descrip.getEditText().getText().toString().trim();
+                        precio = et_Precio.getEditText().getText().toString().trim();
+
                         Toast.makeText(getActivity(),
                                 "Submitted name : " + name, Toast.LENGTH_SHORT).show();
                         // Say hello to the submitter
                         if (LogedInFacebook) {
-
                             ejecutarServicio("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/InsertProducto.php", false);
                             listaProductos.clear();
                             getInfoUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdUser.php?email=" + user.getEmail() + "");
-
                         } else {
                             //Insertar producto logeado con email
                             recuperarPreferencias();
@@ -167,6 +177,8 @@ public class ProductosFragment extends Fragment {
                             listaProductos.clear();
                             getInfoUser("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdUser.php?email=" + emailPreferencia + "");
                         }
+                        // Dismiss the alert dialog
+                        dialog.cancel();
                     }
                 });
 
@@ -185,8 +197,6 @@ public class ProductosFragment extends Fragment {
                 dialog.show();
 
                 //Insertar producto logeado con facebook
-
-
             }
         });
 
@@ -219,6 +229,48 @@ public class ProductosFragment extends Fragment {
         });
         return root;
     }
+
+    //Funciones de validacion
+    private boolean validateTitle(TextInputLayout et_Nombre) {
+        name = et_Nombre.getEditText().getText().toString().trim();
+        Log.d("myTag", name);
+        if (name.isEmpty()) {
+            et_Nombre.setError("El campo no puede estar vacío");
+            return false;
+        } else {
+            et_Nombre.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validateDescription(TextInputLayout et_Descrip) {
+        desc = et_Descrip.getEditText().getText().toString().trim();
+
+        if (desc.isEmpty()) {
+            et_Descrip.setError("El campo no puede estar vacío");
+            return false;
+        } else {
+            et_Descrip.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validatePrice(TextInputLayout et_Precio) {
+        precio = et_Precio.getEditText().getText().toString().trim();
+
+        if (precio.isEmpty()) {
+            et_Precio.setError("El campo no puede estar vacío");
+            return false;
+        } else {
+            et_Precio.setError(null);
+            return true;
+        }
+    }
+    /*
+    private boolean validatePhoto() {
+
+    }*/
+    //Funciones de validacion /
 
     private void ObtenerProductos(String URL) {
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(URL, new Response.Listener<JSONArray>() {

@@ -187,7 +187,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    //CAMBIOS
     private boolean validateEmail() {
         String emailInput = et_username.getEditText().getText().toString().trim();
 
@@ -214,7 +213,6 @@ public class LoginActivity extends AppCompatActivity {
             return true;
         }
     }
-    //CAMBIOS/
 
     private void handleFacebookToken(AccessToken token){
         Log.d(TAG, "handleFacebookToken" + token);
