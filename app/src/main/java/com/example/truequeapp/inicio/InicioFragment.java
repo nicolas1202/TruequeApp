@@ -163,8 +163,9 @@ try {
                 imagenProductoStack =  cardItems.get(currentPosition).getImagen();
                 recuperarPreferenciasIdProducto();
                 if (cardItems.get(currentPosition).getId() != 999999999){
-                   // ejecutarServicio( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/insertMatch.php", idProductoPref );
-                    getInfoMatch( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/verificarMatchs.php?FK_idMiProducto=" +  idProductoPref + "&FK_idProductoLike="+ idStack  +"");
+                    getInfoMatch( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/verificarMatchs.php?FK_idMiProducto=" +
+                            idProductoPref + "&FK_idProductoLike="+ idStack  +"&FK_idUsuarioLike="+idGeneral+"");
+                   // ejecutarServicio( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/insertLike.php?", idProductoPref, idGeneral);
                 }
                 currentPosition = position + 1;
 
@@ -427,7 +428,7 @@ try {
 
     }
 
-    private void ejecutarServicio(String URL, final String id){
+    private void ejecutarServicio(String URL, final String FK_idMiProducto, final String FK_idUsuario){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -445,8 +446,9 @@ try {
             protected Map<String, String> getParams() throws AuthFailureError {
 
                 Map<String,String> parametros = new HashMap<String, String>();
-                parametros.put("FK_idMiProducto", id);
                 parametros.put("FK_idProductoLike", String.valueOf(idStack) );
+                parametros.put("FK_idMiProducto", String.valueOf(FK_idMiProducto) );
+                parametros.put("FK_idUsuario", String.valueOf(FK_idUsuario) );
                 return parametros;
             }
         };
