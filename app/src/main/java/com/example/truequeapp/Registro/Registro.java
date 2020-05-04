@@ -12,6 +12,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.truequeapp.R;
 import com.example.truequeapp.login.LoginActivity;
+import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -34,11 +35,11 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class Registro extends AppCompatActivity {
 
-    EditText nombre;
-    EditText password;
-    EditText apellido;
-    EditText email;
-    EditText telefono;
+    private TextInputLayout nombre;
+    private TextInputLayout password;
+    private TextInputLayout apellido;
+    private TextInputLayout email;
+    private TextInputLayout telefono;
     Button registrarse;
 
     @Override
@@ -48,11 +49,11 @@ public class Registro extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        nombre = (EditText) findViewById(R.id.etNombre);
-        password = (EditText) findViewById(R.id.etPassword);
-        apellido = (EditText) findViewById(R.id.etApellido);
-        email = (EditText) findViewById(R.id.etEmail);
-        telefono = (EditText) findViewById(R.id.etTelefono);
+        nombre =  findViewById(R.id.etNombre);
+        password = findViewById(R.id.etPassword);
+        apellido = findViewById(R.id.etApellido);
+        email =  findViewById(R.id.etEmail);
+        telefono = findViewById(R.id.etTelefono);
         registrarse = (Button) findViewById(R.id.idBtnRegistrarse);
 
         registrarse.setOnClickListener(new View.OnClickListener() {
@@ -82,13 +83,13 @@ public class Registro extends AppCompatActivity {
         }){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                String passEncriptada=Encriptar(password.getText().toString()) ;
+                String passEncriptada=Encriptar(password.getEditText().getText().toString().trim());
                 Map<String,String> parametros = new HashMap<String, String>();
-                parametros.put("nombre", nombre.getText().toString());
+                parametros.put("nombre", nombre.getEditText().getText().toString().trim());
                 parametros.put("password",passEncriptada);
-                parametros.put("apellido", apellido.getText().toString());
-                parametros.put("email", email.getText().toString());
-                parametros.put("telefono", telefono.getText().toString());
+                parametros.put("apellido", apellido.getEditText().getText().toString().trim());
+                parametros.put("email", email.getEditText().getText().toString().trim());
+                parametros.put("telefono", telefono.getEditText().getText().toString().trim());
                 return parametros;
             }
         };
