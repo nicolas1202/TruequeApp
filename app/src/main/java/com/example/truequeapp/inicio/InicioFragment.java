@@ -85,6 +85,7 @@ public class InicioFragment extends Fragment {
     private String idProductoPref;
     private String imagenProductoPref;
     private String imagenProductoStack;
+    private String idProductoSpinner;
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
         inicioViewModel =
@@ -107,6 +108,7 @@ public class InicioFragment extends Fragment {
         btnCancel = root.findViewById(R.id.cancel);
         btnLove = root.findViewById(R.id.love);
         currentPosition = 0;
+
 try {
 
 
@@ -116,12 +118,11 @@ try {
         emailFireBase = user.getEmail();
         if (emailFireBase != null){
             recuperarPreferenciasFacebook();
-            Log.i("TAG", "TELEFONO "+user.getPhoneNumber());
             idUserFacebook = idFaceb;
             Log.i("TAG", "idUserFacebook "+idUserFacebook);
             Log.i("TAG", "Se llama desde fb");
             LogedInFacebook = true;
-            setCardStackAdapter(idUserFacebook);
+          //  setCardStackAdapter(idUserFacebook);
             agregarProductoSpinner(idUserFacebook);
             emailguardado =  user.getEmail();
             idGeneral = idUserFacebook;
@@ -135,7 +136,7 @@ try {
             //lOGIN EMAIL Y CONTRASEÑA
             Log.i("TAG", "Se llama desde local");
             Log.i("TAG", "idUserLocal"+ idUserLocal);
-            setCardStackAdapter(idUserLocal);
+          //  setCardStackAdapter(idUserLocal);
             agregarProductoSpinner(idUserLocal);
             emailguardado =  emailPreferencia;
             idGeneral = idUserLocal;
@@ -157,15 +158,17 @@ try {
             @Override
             public void onViewSwipedToRight(int position) {
 
+                //LIKE
 
                 //Obtener idProducto Stack
                 idStack =  cardItems.get(currentPosition).getId();
                 imagenProductoStack =  cardItems.get(currentPosition).getImagen();
-                recuperarPreferenciasIdProducto();
+                recuperarPreferenciasDatosProducto();
+                Log.i("TAG", "id producto antes de insertar match: " + idProductoPref);
                 if (cardItems.get(currentPosition).getId() != 999999999){
                     getInfoMatch( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/verificarMatchs.php?FK_idMiProducto=" +
-                            idProductoPref + "&FK_idProductoLike="+ idStack  +"&FK_idUsuarioLike="+idGeneral+"");
-                   // ejecutarServicio( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/insertLike.php?", idProductoPref, idGeneral);
+                            idProductoPref + "&FK_idProductoLike="+ idStack  +"");
+                  // ejecutarServicio( "https://truequeapp.000webhostapp.com/WebServiceTruequeApp/insertLike.php?", idProductoPref, idGeneral);
                 }
                 currentPosition = position + 1;
 
@@ -177,11 +180,9 @@ try {
             }
         });
 
-      btnCancel.setOnClickListener(new View.OnClickListener() {
+         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-
-                cardStack.swipeTopViewToLeft();
+            public void onClick(View view) { cardStack.swipeTopViewToLeft();
             }
         });
 
@@ -199,31 +200,34 @@ try {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
 
-
-                Log.i("TAG", "onItemSelected: " + spinner.getSelectedItem().toString());
             if (spinner.getSelectedItem().toString().equals("Seleccione un producto")){
                 cardStack.setVisibility(View.INVISIBLE);
                 btnCancel.setVisibility(View.INVISIBLE);
                 btnLove.setVisibility(View.INVISIBLE);
-              //  Toast.makeText(getActivity(), "Seleccione un producto para permutar", Toast.LENGTH_LONG).show();
-            }else{
+            } else {
                 //  Obtener ID producto Spinner
-                nombreProductoSpinner = spinner.getSelectedItem().toString();
-                ObtenerDatosProducto("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdProductSpinner.php?FK_idUser=" + idGeneral + "&nombre="+nombreProductoSpinner +"");
-                cardStack.setVisibility(View.VISIBLE);
+
                 btnCancel.setVisibility(View.VISIBLE);
                 btnLove.setVisibility(View.VISIBLE);
+                nombreProductoSpinner = spinner.getSelectedItem().toString();
+                Log.i("TAG", "Item seleccionado del Spinner: " + spinner.getSelectedItem().toString());
+                Log.i("TAG", "idGeneral " + idGeneral);
+                ObtenerDatosProducto("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getIdProductSpinner.php?FK_idUser=" + idGeneral + "&nombre="+spinner.getSelectedItem().toString() +"");
+                recuperarPreferenciasDatosProducto();
+               // setCardStackAdapter(idGeneral);
+                cardStack.setVisibility(View.VISIBLE);
+
             }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+              //  cardItems.add(new CardItem(999999999,"¡Seleccione su producto!","", "", "https://dam.ngenespanol.com/wp-content/uploads/2020/01/blue-monday.jpg"));
 
             }
         });
 
-
+        root.clearFocus();
         return root;
 
     }
@@ -233,10 +237,11 @@ try {
             @Override
             public void onResponse(JSONArray response) {
                 JSONObject jsonObject = null;
-
+                Log.i("TAG", "Limpio la lista");
+                cardItems.clear();
                 for (int i = 0; i < response.length(); i++) {
                     try {
-                        Log.i("TAG", "ObtenerProductos");
+
                         jsonObject = response.getJSONObject(i);
 
                         cardItems.add(new CardItem(Integer.parseInt(jsonObject.getString("idProduct")),jsonObject.getString("nombre"),jsonObject.getString("descripcion"), jsonObject.getString("precio"), jsonObject.getString("imagen")));
@@ -246,7 +251,7 @@ try {
                     }
 
                 }
-                Log.i("TAG", "onResponse: Cargo los productos");
+                Log.i("TAG", "Agrego Productos a la lista");
                // cardItems.add(new CardItem(R.drawable.triste,"¡No hay mas productos!","Vuelve pronto", "", "https://dam.ngenespanol.com/wp-content/uploads/2020/01/blue-monday.jpg"));
             }
         }, new Response.ErrorListener() {
@@ -307,17 +312,25 @@ try {
 
     }
 
-    private void setCardStackAdapter(String id) {
+    private void setCardStackAdapter(String idUser, String idProducto) {
 
-
-        Log.i("TAG", "SetCardAdapter");
         cardItems = new ArrayList<>();
-        ObtenerProductos("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getProducts.php?FK_idUser=" + id + "");
+        Log.i("TAG", "SetCardAdapter");
+
+
+        Log.i("TAG", "IDUSER" + idUser);
+        Log.i("TAG", "IDPRODUCTO - " + idProducto);
+
+        ObtenerProductos("https://truequeapp.000webhostapp.com/WebServiceTruequeApp/getProducts.php?FK_idUser=" + idUser +
+                        "&FK_idProducto="+idProducto +"");
+
+        recuperarPreferenciasDatosProducto();
+        Log.i("TAG", "IMAGENPRODUCTO - " + imagenProductoPref);
 
 
         cardsAdapter = new CardsAdapter(getActivity(), cardItems);
         cardStack.setAdapter(cardsAdapter);
-
+        cardsAdapter.notifyDataSetChanged();
  }
 
     public void agregarProductoSpinner(String id) {
@@ -338,9 +351,10 @@ try {
             @Override
             public void onResponse(JSONArray response) {
                 JSONObject jsonObject = null;
+                Log.i("TAG", "Agrego mis productos al spinner");
                 for (int i = 0; i < response.length(); i++) {
                     try {
-                        Log.i("TAG", "ObtenerMisProductos");
+
                         jsonObject = response.getJSONObject(i);
                         lista.add(jsonObject.getString("nombre"));
 
@@ -370,10 +384,10 @@ try {
 
                 for (int i = 0; i < response.length(); i++) {
                     try {
-
+                        Log.i("TAG", "Guardo id e imagen del producto del spinner");
                         jsonObject = response.getJSONObject(i);
                       guardarDatosProducto(jsonObject.getString("idProduct"),jsonObject.getString("imagen"));
-
+                        setCardStackAdapter(idGeneral, jsonObject.getString("idProduct"));
 
 
                     } catch (JSONException e) {
@@ -439,7 +453,7 @@ try {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("TAG", "error al insertar match");
+                Log.i("TAG", "error al insertar like");
             }
         }){
             @Override
@@ -462,12 +476,13 @@ try {
             @Override
             public void onResponse(JSONArray response) {
                 JSONObject jsonObject = null;
+
                 for (int i = 0; i < response.length(); i++) {
                     try {
 
                         jsonObject = response.getJSONObject(i);
 
-                        Log.i("TAG", " cc=" + Integer.parseInt(jsonObject.getString("cc")));
+                        Log.i("TAG", " cc=" +(jsonObject.getString("cc")));
                         if (jsonObject.getString("cc").equals("2")){
                             MostrarVentanaMatch();
                         }
@@ -499,11 +514,13 @@ try {
         editor.commit();
     }
 
-    private void recuperarPreferenciasIdProducto() {
+    private void recuperarPreferenciasDatosProducto() {
         SharedPreferences preferences = this.getActivity().getSharedPreferences("idProductoPreference", Context.MODE_PRIVATE);
 
         idProductoPref = preferences.getString("idProducto", "-1");
         imagenProductoPref = preferences.getString("imagenProducto", "-1");
+        Log.i("TAG", "recuperarPreferenciasDatosProducto: " + idProductoPref);
+        Log.i("TAG", "recuperarPreferenciasDatosProducto: " + imagenProductoPref);
     }
 
     @SuppressLint("ResourceAsColor")

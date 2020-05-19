@@ -26,6 +26,7 @@ public class CardsAdapter  extends BaseAdapter {
     private List<CardItem> data;
 
     public CardsAdapter(Activity activity, List<CardItem> data) {
+
         this.data = data;
         this.activity = activity;
     }

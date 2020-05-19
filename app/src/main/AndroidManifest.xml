@@ -28,7 +28,7 @@
         <activity
             android:name=".Registro.Registro"
             android:label="@string/title_activity_registro"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- ............................................................ -->
         <activity
@@ -40,7 +40,8 @@
         <activity
             android:name=".Main.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+           >
 
         </activity>
         <!-- ............................................................ -->

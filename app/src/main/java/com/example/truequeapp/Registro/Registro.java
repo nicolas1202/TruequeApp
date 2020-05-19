@@ -41,6 +41,7 @@ public class Registro extends AppCompatActivity {
     private TextInputLayout email;
     private TextInputLayout telefono;
     Button registrarse;
+    Button iniciarSesion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,8 @@ public class Registro extends AppCompatActivity {
         apellido = findViewById(R.id.etApellido);
         email =  findViewById(R.id.etEmail);
         telefono = findViewById(R.id.etTelefono);
-        registrarse = (Button) findViewById(R.id.idBtnRegistrarse);
+        registrarse =  findViewById(R.id.idBtnRegistrarse);
+        iniciarSesion = findViewById(R.id.idBtnRegistrarse);
 
         registrarse.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +65,13 @@ public class Registro extends AppCompatActivity {
             }
         });
 
-
+        iniciarSesion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     private void ejecutarServicio(String URL){

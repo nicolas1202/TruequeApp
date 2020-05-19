@@ -20,7 +20,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvProductosI"
             android:layout_width="match_parent"
-            android:layout_height="552dp" />
+            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/btnAgregarProducto"
