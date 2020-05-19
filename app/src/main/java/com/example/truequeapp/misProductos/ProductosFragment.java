@@ -1,10 +1,14 @@
 package com.example.truequeapp.misProductos;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -13,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +67,10 @@ public class ProductosFragment extends Fragment {
     private Boolean LogedInFacebook = false;
     private TextView tvID;
 
+    //DECLARAR VARIABLES PARA TOMAR FOTO!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    private ImageView mimageView;
+    private static final int REQUEST_IMAGE_CAPTURE = 101;
+
     //variables productos cardview
     int idProducto;
     private String nombreProducto;
@@ -85,6 +94,12 @@ public class ProductosFragment extends Fragment {
         listaProductos = new ArrayList<>();
         adaptador = new AdaptadorProductos(getContext(), listaProductos);
 
+        //INICIALIZAR VIEW DEL FRAGMENT Y VARIABLE DE IMAGEVIEW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        final View viewAddProduct = inflater.inflate(R.layout.add_product, container, false);
+        mimageView = (ImageView) viewAddProduct.findViewById(R.id.previaFoto);
+        if(null == mimageView) {
+            Log.e("Error", "Ouh! there is no child view with R.id.imageView ID within my parent view View.");
+        }
 
         productosViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -134,6 +149,7 @@ public class ProductosFragment extends Fragment {
                 builder.setView(dialogView);
 
                 // Get the custom alert dialog view widgets reference
+                Button btn_seleccionarFoto = (Button) dialogView.findViewById(R.id.btnSeleccionarFoto);
                 Button btn_positive = (Button) dialogView.findViewById(R.id.btnBuscar);
                 Button btn_negative = (Button) dialogView.findViewById(R.id.btnWapp);
                 //final EditText etNombre = dialogView.findViewById(R.id.etNombreProd);
@@ -146,6 +162,18 @@ public class ProductosFragment extends Fragment {
 
                 // Create the alert dialog
                 final AlertDialog dialog = builder.create();
+
+                //LISTENER DEL BOTÓN LLAMAR FOTO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                btn_seleccionarFoto.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent imageTakeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                        if(imageTakeIntent.resolveActivity(getActivity().getPackageManager())!=null){ //Hay que agregar getActivity() porque se encuentra en un fragment (No es buena práctica)
+                            startActivityForResult(imageTakeIntent, REQUEST_IMAGE_CAPTURE);
+                        }
+                    }
+                });
 
                 // Set positive/yes button click listener
                 btn_positive.setOnClickListener(new View.OnClickListener() {
@@ -228,6 +256,20 @@ public class ProductosFragment extends Fragment {
             }
         });
         return root;
+    }
+
+    //FUNCIÓN PARA COLOCAR FOTO EN EL IMAGEVIEW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(requestCode==REQUEST_IMAGE_CAPTURE && resultCode==Activity.RESULT_OK) {
+            try {
+                Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
+                mimageView.setImageBitmap(imageBitmap);
+                Log.d("YESSS!!!!!!!!!!", "La imagen se debería haber cargado en el imageView");
+            } catch (Exception e){
+                Log.d("ERROR IMAGE!!!!!!!!!!", e.getMessage());
+            }
+        }
     }
 
     //Funciones de validacion

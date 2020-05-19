@@ -72,14 +72,16 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/previaFoto"
+            android:src="@mipmap/ic_launcher"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_marginTop="10dp"
             app:srcCompat="@android:drawable/screen_background_dark_transparent" />
 
         <Button
-            android:id="@+id/btnAgregarFoto"
+            android:id="@+id/btnSeleccionarFoto"
+            android:onClick="takePicture"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
