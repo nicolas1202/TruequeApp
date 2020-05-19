@@ -96,7 +96,7 @@ public class ProductosFragment extends Fragment {
 
         //INICIALIZAR VIEW DEL FRAGMENT Y VARIABLE DE IMAGEVIEW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         final View viewAddProduct = inflater.inflate(R.layout.add_product, container, false);
-        mimageView = (ImageView) viewAddProduct.findViewById(R.id.previaFoto);
+        mimageView = (ImageView) viewAddProduct.findViewById(R.id.imageView2);
         if(null == mimageView) {
             Log.e("Error", "Ouh! there is no child view with R.id.imageView ID within my parent view View.");
         }
@@ -149,7 +149,7 @@ public class ProductosFragment extends Fragment {
                 builder.setView(dialogView);
 
                 // Get the custom alert dialog view widgets reference
-                Button btn_seleccionarFoto = (Button) dialogView.findViewById(R.id.btnSeleccionarFoto);
+                Button btn_seleccionarFoto = (Button) dialogView.findViewById(R.id.btnAgregarFoto);
                 Button btn_positive = (Button) dialogView.findViewById(R.id.btnBuscar);
                 Button btn_negative = (Button) dialogView.findViewById(R.id.btnWapp);
                 //final EditText etNombre = dialogView.findViewById(R.id.etNombreProd);
